@@ -1,0 +1,89 @@
+model Session {
+  key          String @id
+  session_data Json
+}
+
+model Vehicle {
+  id                 Int               @id @default(autoincrement())
+  veh_no             String
+  veh_type           VehicleType
+  veh_damages        String
+  veh_damages_images Bytes[]
+  to                 TO                @relation(fields: [toId], references: [id])
+  toId               Int
+  veh_movement       VehicleMovement[]
+}
+
+model TO {
+  id                  Int               @id @default(autoincrement())
+  name                String            @unique
+  contact             String            @unique
+  next_of_kin_name    String            @unique
+  next_of_kin_contact String            @unique
+  rank                String
+  vehicles            Vehicle[]
+  veh_damages         String
+  veh_damages_images  Bytes[]
+  moving_out_seq      Int
+  book_out            BookOutTiming[]
+  veh_movement        VehicleMovement[]
+}
+
+model BookOutTiming {
+  id       Int      @id @default(autoincrement())
+  book_out DateTime
+  book_in  DateTime
+  to       TO       @relation(fields: [toId], references: [id])
+  toId     Int
+}
+
+model VehicleMovement {
+  id        Int      @id @default(autoincrement())
+  move_out  DateTime
+  to        TO       @relation(fields: [toId], references: [id])
+  toId      Int
+  vehicle   Vehicle  @relation(fields: [vehicleId], references: [id])
+  vehicleId Int
+}
+
+model User {
+  id          Int           @id @default(autoincrement())
+  email       String        @unique
+  password    String        @unique
+  name        String        @unique
+  userSession UserSession[]
+}
+
+model UserSession {
+  id           Int    @id @default(autoincrement())
+  key          String
+  session_data String
+  userId       Int
+  user         User   @relation(fields: [userId], references: [id])
+}
+
+enum VehicleType {
+  SOUV
+  OUV
+  FIVETON
+  CP
+  FSD
+  PSD
+  GP
+}
+
+enum Status {
+  DEFERRED
+  ACTIVE
+  ABSENT
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}

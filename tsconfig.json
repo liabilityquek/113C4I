@@ -1,0 +1,56 @@
+{
+  "compilerOptions": {
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/lib/countdown.js",
+    "src/app/config/database.js",
+    "src/app/user-info/page.jsx",
+    "src/app/user-info/error.jsx",
+    "src/app/success/page.jsx",
+    "src/app/success/error.jsx",
+    "src/app/logout/page.jsx",
+    "src/app/home/page.jsx",
+    "src/components/Login.jsx",
+    "src/lib/store.js",
+    "src/app/login/error.jsx",
+    "src/lib/hooks.js",
+    "src/lib/get-cookies.js",
+    "src/lib/sgidClient.js",
+    "src/middleware.jsx",
+    "src/app/login/page.jsx"  
+, "src/app/not-found.jsx", "src/app/layout.jsx"  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

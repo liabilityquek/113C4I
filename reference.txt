@@ -1,0 +1,4 @@
+https://github.com/lockedandlifted/my4x4/blob/main/src/mailers/newPostCommentMailer.tsx
+https://github.com/ernesttan1976/fero/blob/main/src/app/controllers/usersController.js
+https://github.com/resendlabs/react-email/blob/main/examples/sendgrid/src/email.tsx
+https://react.email/docs/integrations/sendgrid
