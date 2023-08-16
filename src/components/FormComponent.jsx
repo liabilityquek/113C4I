@@ -7,14 +7,10 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useRouter } from 'next/navigation';
 
-const NEXT_PUBLIC_BASEURL = process.env.NEXT_PUBLIC_BASEURL;
-const NEXTAUTH_URL = process.env.NEXT_PUBLIC_NEXTAUTH_URL
-
-const ForgetPasswordForm = () => {
-    
-    const router = useRouter();
+const FormComponent = ({ url, redirectPath, showForgetPasswordLink, buttonText, ...props }) => {
     const [revealPassword, setRevealPassword] = useState(false);
     const [serverError, setServerError] = useState(null)
+    const router = useRouter();
     const {
         register,
         handleSubmit,
@@ -23,7 +19,7 @@ const ForgetPasswordForm = () => {
 
     const onSubmit = async (data) => {
         try {
-            const response = await fetch(`${NEXT_PUBLIC_BASEURL}/api/server/reset-password`, {
+            const response = await fetch(url, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -31,18 +27,18 @@ const ForgetPasswordForm = () => {
                 body: JSON.stringify(data)
             });
             if (response.status === 400) {
-                const errorText = await response.text(); 
+                const errorText = await response.text();
                 setServerError(errorText);
                 return;
             }
             if (response.ok) {
-                router.push(`${NEXTAUTH_URL}/login/admin`)
+                router.push(redirectPath)
             } else {
                 const errorData = await response.json();
                 setServerError(errorData);
             }
         } catch (error) {
-            console.log(`Error resetting password: ${error}`);
+            console.log(`Error logging in: ${error}`);
         }
     };
 
@@ -64,7 +60,9 @@ const ForgetPasswordForm = () => {
                         className="w-full py-2 px-4 rounded-md"
                         {...register("email", { required: "Email is required" })}
                     />
-                    {errors.email ? (<p className="text-base text-red-600 w-full py-2 px-4 rounded-md">{errors?.email?.message}</p>) : null}
+                    {errors.email ? (
+                        <p className="text-base text-red-600 w-full py-2 px-4 rounded-md">{errors?.email?.message}</p>
+                    ) : null}
                 </div>
                 <div className="mb-4 w-full border-2 border-gray-600 rounded-md relative">
                     <input
@@ -77,7 +75,7 @@ const ForgetPasswordForm = () => {
                             required: "Password is required",
                             pattern: {
                                 value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/,
-                                message: 'Password must contain at least: 1 uppercase, 1 lowercase, 1 number, and 1 special character',
+                                message: 'Password must at least contain: 1 uppercase, 1 lowercase, 1 number, and 1 special character',
                             }
                         })}
                     />
@@ -88,16 +86,24 @@ const ForgetPasswordForm = () => {
                     >
                         {revealPassword ? 'Hide' : 'Show'}
                     </button>
-                    {errors.password ? ( <p className="text-base text-red-600 w-full py-2 px-4 rounded-md">{errors?.password?.message}</p>) : null }
+                    {errors.password ? (<p className="text-base text-red-600 w-full py-2 px-4 rounded-md"> {errors?.password?.message}</p>) : null}
                 </div>
-                <div className="mb-4 text-left">
-                </div>
+                {showForgetPasswordLink ? (
+                    <div className="mb-4 text-left">
+
+                        <Link href="/reset-password" prefetch={false} className="text-blue-600 hover:text-blue-800">
+                            Forget Password?
+                        </Link>
+                    </div>
+                ) : null}
+
+
                 <button className="inline-block px-7 py-4 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out w-full">
-                    Reset Password
+                    { buttonText || 'Login' }
                 </button>
             </form>
         </div>
     );
 };
 
-export default ForgetPasswordForm;
+export default FormComponent;
