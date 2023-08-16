@@ -27,7 +27,7 @@ const handleLogin = async (state) => {
   // store.set(sessionId, { state, codeVerifier, nonce });
   await storeSession(sessionId, { state, codeVerifier, nonce });
   // console.log(`url: ${url}`)
-
+  // console.log(`state in Login page: ${state}`)
   redirect(url);
 };
 

@@ -47,6 +47,10 @@ const createUser = async (req, res) => {
 
     } catch (e) {
         if (e instanceof Yup.ValidationError) {
+            const ValidationErrors = {};
+            e.inner.forEach((error) => {
+                ValidationErrors[error.path] = error.message;
+                });
             return res.status(400).send(`Yup validation error: ${e}`);
         }
         console.log("error: ", e);
@@ -103,6 +107,10 @@ const login = async (req, res) => {
         }
     } catch (e) {
         if (e instanceof Yup.ValidationError) {
+            const ValidationErrors = {};
+            e.inner.forEach((error) => {
+                ValidationErrors[error.path] = error.message;
+                });
             // If the error is a Yup error, return a 400 status with the validation error message
             return res.status(400).send(`Yup validation error: ${e}`);
         }
@@ -192,6 +200,10 @@ const resetPassword = async (req, res) => {
         }
     } catch (e) {
         if (e instanceof Yup.ValidationError) {
+            const ValidationErrors = {};
+            e.inner.forEach((error) => {
+                ValidationErrors[error.path] = error.message;
+                });
             // If the error is a Yup error, return a 400 status with the validation error message
             return res.status(400).send(`Yup validation error: ${e}`);
         }

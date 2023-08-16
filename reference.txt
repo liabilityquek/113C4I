@@ -2,3 +2,7 @@ https://github.com/lockedandlifted/my4x4/blob/main/src/mailers/newPostCommentMai
 https://github.com/ernesttan1976/fero/blob/main/src/app/controllers/usersController.js
 https://github.com/resendlabs/react-email/blob/main/examples/sendgrid/src/email.tsx
 https://react.email/docs/integrations/sendgrid
+https://www.freecodecamp.org/news/how-to-authenticate-users-with-nextauth-in-nextjs-app-and-pages-router/
+https://github.com/wpcodevo/nextauth-nextjs13-prisma/blob/main/src/app/login/page.tsx
+https://codevoweb.com/nextjs-use-custom-login-and-signup-pages-for-nextauth-js/
+https://bestofjs.org/projects/react-hook-form
