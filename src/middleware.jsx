@@ -1,3 +1,5 @@
+export { default } from "next-auth/middleware"
+
 import { NextRequest, NextResponse } from 'next/server'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -28,3 +30,8 @@ export async function middleware(req) {
       return logoutRes
   }
 }
+
+// export const config = {
+//   // ensures that any route other than those for the singpass, trainer, admin and api directories will be protected
+//   matcher: ["/((?!|api|login|admin|trainer|singpass|https://api.id.gov.sg).*)"],
+// };

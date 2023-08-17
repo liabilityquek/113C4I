@@ -6,8 +6,8 @@ import { storeSession } from "@/lib/store";
 import { getCookies } from "@/lib/get-cookies";
 
 const handleLogin = async (state) => {
-  const sessionId = getCookies();
-  console.log(`sessionId from login page: ${sessionId}`)
+  const sessionId = await getCookies();
+  console.log(`sessionId from singpass page: ${sessionId}`)
 
   if (!sessionId) {
     throw new Error("Session ID not found in browser's cookies");
