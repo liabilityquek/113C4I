@@ -9,13 +9,13 @@ import { useState } from 'react';
 const NEXTAUTH_URL = process.env.NEXT_PUBLIC_NEXTAUTH_URL
 
 const loginType = [
-  { value: 'singpass', label: 'Login with Singpass app', link: `${NEXTAUTH_URL}/login` },
-  { value: 'trainer', label: 'Login as Trainer', link: `${NEXTAUTH_URL}/api/auth/signin` },
+  { value: 'singpass', label: 'Login with Singpass app', link: `${NEXTAUTH_URL}/singpass` },
+  { value: 'trainer', label: 'Login as Trainer', link: `${NEXTAUTH_URL}/trainer` },
   { value: 'admin', label: 'Login as Admin', link: `${NEXTAUTH_URL}/admin` },
 ]
 
 const Login = () => {
-  const [state, setState] = useState('')
+  const [state, setState] = useState('singpass')
   const selectedLoginType = loginType.find((type) => type.value === state);
   return (
     <div className="bg-white rounded-md py-12 px-8 flex flex-col max-w-lg">
@@ -35,7 +35,7 @@ const Login = () => {
       </select>
 
       {/* <Link prefetch={false} href={`${selectedLoginType.link}?state=${state}`} className="flex"> */}
-      <Link prefetch={false} href={selectedLoginType ? `${selectedLoginType.link}` : '#'} className="flex">
+      <Link prefetch={true} href={selectedLoginType ? `${selectedLoginType.link}` : '#'} className="flex">
         <button className="py-2 px-4 font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 w-fit mx-auto mt-8">
           Login
         </button>

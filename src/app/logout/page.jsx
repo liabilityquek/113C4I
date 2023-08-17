@@ -7,7 +7,7 @@ const handleLogout = async () => {
     const sessionId = getCookies();
   
     if (!sessionId) {
-      throw new Error("Session ID not found in browser's cookies");
+      console.error("Session ID not found in browser's cookies");
     }else{
       // Delete session from memory
     

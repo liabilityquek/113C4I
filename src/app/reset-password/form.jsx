@@ -7,9 +7,12 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useRouter } from 'next/navigation';
 
-const FormComponent = ({ url, redirectPath, showForgetPasswordLink, buttonText, ...props }) => {
+const NEXT_PUBLIC_BASEURL = process.env.NEXT_PUBLIC_BASEURL
+
+const ResetPasswordForm = () => {
     const [revealPassword, setRevealPassword] = useState(false);
     const [serverError, setServerError] = useState(null)
+    const [loading, setLoading] = useState(false)
     const router = useRouter();
     const {
         register,
@@ -18,8 +21,10 @@ const FormComponent = ({ url, redirectPath, showForgetPasswordLink, buttonText, 
     } = useForm();
 
     const onSubmit = async (data) => {
+        
+        setLoading(true);
         try {
-            const response = await fetch(url, {
+            const response = await fetch(`${NEXT_PUBLIC_BASEURL}/api/server/reset-password`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -28,11 +33,12 @@ const FormComponent = ({ url, redirectPath, showForgetPasswordLink, buttonText, 
             });
             if (response.status === 400) {
                 const errorText = await response.text();
+                setLoading(false);
                 setServerError(errorText);
                 return;
             }
             if (response.ok) {
-                router.push(redirectPath)
+                router.push('/admin')
             } else {
                 const errorData = await response.json();
                 setServerError(errorData);
@@ -40,6 +46,7 @@ const FormComponent = ({ url, redirectPath, showForgetPasswordLink, buttonText, 
         } catch (error) {
             console.log(`Error logging in: ${error}`);
         }
+        setLoading(false);
     };
 
     return (
@@ -49,7 +56,7 @@ const FormComponent = ({ url, redirectPath, showForgetPasswordLink, buttonText, 
                     <Image src={armyLogo} alt="sgID logo" />
                 </div>
             </div>
-            {serverError ? <p className="text-base text-red-600 w-full py-2 px-4 rounded-md mb-6 mt-2"> {serverError} </p> : null}
+            {serverError ? <p className="bg-red-100 text-base text-red-600 w-full py-2 px-4 rounded-md mb-6 mt-2"> {serverError} </p> : null}
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
                     <input
@@ -88,22 +95,16 @@ const FormComponent = ({ url, redirectPath, showForgetPasswordLink, buttonText, 
                     </button>
                     {errors.password ? (<p className="text-base text-red-600 w-full py-2 px-4 rounded-md"> {errors?.password?.message}</p>) : null}
                 </div>
-                {showForgetPasswordLink ? (
-                    <div className="mb-4 text-left">
-
-                        <Link href="/reset-password" prefetch={false} className="text-blue-600 hover:text-blue-800">
-                            Forget Password?
-                        </Link>
-                    </div>
-                ) : null}
 
 
-                <button className="inline-block px-7 py-4 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out w-full">
-                    { buttonText || 'Login' }
+                <button 
+                disabled={loading}
+                className="inline-block px-7 py-4 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out w-full">
+                    {loading ? 'Loading...' : 'Reset'}
                 </button>
             </form>
         </div>
     );
 };
 
-export default FormComponent;
+export default ResetPasswordForm;
