@@ -49,7 +49,7 @@ const getAndStoreUserInfo = async (code, sessionId) => {
 export default async function Callback({ searchParams }) {
   console.log(`searchParams: ${JSON.stringify(searchParams, null, 2)}`)
   const code = searchParams?.code
-  const sessionId = await getCookies();
+  const sessionId =  getCookies();
   console.log(`sessionId: ${sessionId}`)
   if (!code) {
     throw new Error(

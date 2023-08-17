@@ -4,7 +4,7 @@ import { deleteSession } from "@/lib/store";
 
 const handleLogout = async () => {
     // Get session ID from cookie
-    const sessionId = await getCookies();
+    const sessionId =  getCookies();
   
     if (!sessionId) {
       console.error("Session ID not found in browser's cookies");

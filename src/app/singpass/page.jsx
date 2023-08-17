@@ -6,7 +6,7 @@ import { storeSession } from "@/lib/store";
 import { getCookies } from "@/lib/get-cookies";
 
 const handleLogin = async (state) => {
-  const sessionId = await getCookies();
+  const sessionId =  getCookies();
   console.log(`sessionId from singpass page: ${sessionId}`)
 
   if (!sessionId) {

@@ -3,15 +3,18 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { getCookies } from "@/lib/get-cookies";
+import { LogoutButton } from '@/components/button.component'
 
 export default async function Dashboard(sessionId) {
   const session = await getServerSession(authOptions);
-  const getSessionId = await getCookies(sessionId);
+  const getSessionId = getCookies();
   if (!session || !getSessionId) {
     redirect("/");
+  } else {
+    console.log(`getSessionId in home: ${getSessionId}`)
   }
 
-  const userInfo = await getSessionId(sessionId)
+  // const userInfo = await getSessionId(sessionId)
 
   const user = session?.user;
 
@@ -31,13 +34,14 @@ export default async function Dashboard(sessionId) {
 
       </div>
       <div className="w-full grid grid-cols-2 py-2 gap-4">
-        <Link
+        {session ? <LogoutButton /> : (<Link
           prefetch={false}
           href="/logout"
-          className="w-full text-white cursor-pointer rounded-md bg-blue-600 hover:bg-blue-700 py-2 px-4 text-center"
+          className="py-2 px-4 font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 w-fit mx-auto mt-8F"
         >
           Logout
-        </Link>
+        </Link>)}
+
 
       </div>
     </>

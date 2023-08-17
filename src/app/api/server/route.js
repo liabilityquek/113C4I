@@ -3,7 +3,7 @@ const app = express();
 const port = 4000;
 const path = require("path");
 const cors = require('cors');
-const { createUser, logout, resetPassword } = require('../../../lib/userController');
+const { createUser, resetPassword } = require('../../../lib/userController');
 
 const NEXTAUTH_URL = process.env.NEXT_PUBLIC_NEXTAUTH_URL
 
@@ -24,7 +24,6 @@ app.use(cors({
 // })
 
 app.post("/api/server/user", createUser);
-app.post("/api/server/logout", logout);
 app.post("/api/server/reset-password", resetPassword);
 
 app.listen(port, () => {

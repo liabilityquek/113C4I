@@ -58,39 +58,6 @@ const createUser = async (req, res) => {
     }
 };
 
-const logout = async (req, res) => {
-    try {
-        // Retrieve the user ID or session ID from the request (e.g., from the cookie or authorization header)
-        const userId = req.userId; // or const sessionId = req.sessionId;
-
-        // Find all the sessions associated with the user ID
-        const userSessions = await prisma.UserSession.findMany({
-            where: {
-                userId: userId, // or key: sessionId
-            },
-        });
-
-        if (!userSessions || userSessions.length === 0) {
-            console.log(`Error removing session for userId: ${userId}`);
-            return res.status(404).send(`No sessions found for userId: ${userId}`);
-        }
-
-        // Delete all the sessions associated with the user ID
-        for (const userSession of userSessions) {
-            await prisma.UserSession.delete({
-                where: {
-                    id: userSession.id,
-                },
-            });
-        }
-
-        return res.status(200).send('Successfully logged out');
-    } catch (error) {
-        console.log(`Error logging out: ${error}`);
-        return res.status(500).send(`An error occurred while logging out: ${error}`);
-    }
-};
-
 const resetPassword = async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -180,5 +147,4 @@ module.exports = {
     resetPassword,
     isAuth,
     createUser,
-    logout
 };
