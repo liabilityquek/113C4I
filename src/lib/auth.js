@@ -83,4 +83,4 @@ const authOptions = {
   },
 };
 
-module.exports = { authOptions };
+export { authOptions };

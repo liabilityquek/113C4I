@@ -72,7 +72,7 @@ export default async function Callback({ searchParams }) {
     <div className="bg-white rounded-md py-12 px-8 flex flex-col max-w-lg min-w-fit">
       <div className="text-xl mx-auto text-center mb-8">
         Logged in successfully! 
-        {redirect('/home')}
+        {/* {redirect('/home')} */}
       </div>
         </div>
 
