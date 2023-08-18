@@ -1,5 +1,9 @@
 import { TrainerLoginForm } from './form'
 
+export const metadata = {
+    title: "Trainer"
+}
+
 const TrainerLogin = () => {
 
     return (

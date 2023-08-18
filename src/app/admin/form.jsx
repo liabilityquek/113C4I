@@ -23,7 +23,7 @@ const AdminLoginForm = () => {
     } = useForm();
 
     const searchParams = useSearchParams();
-    const callbackUrl = searchParams.get("callbackUrl") || "/admin/dashboard";
+    const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
 
     const onSubmit = async (formValues) => {
         try {

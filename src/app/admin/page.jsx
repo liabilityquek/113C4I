@@ -1,5 +1,9 @@
 import AdminLoginForm from './form'
 
+export const metadata = {
+    title: "Admin"
+}
+
 const AdminLogin = () => {
 
     return (

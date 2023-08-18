@@ -5,8 +5,10 @@ import { NextAuthProvider } from "./providers"
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "113C4I",
-  description: "113C4I CMS",
+  title: {
+    default: "113C4I",
+    template: "%s | 113C4I",
+  },
 };
 
 export default function RootLayout({ children }) {

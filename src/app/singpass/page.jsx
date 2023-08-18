@@ -5,6 +5,10 @@ import { generatePkcePair } from "@opengovsg/sgid-client";
 import { storeSession } from "@/lib/store";
 import { getCookies } from "@/lib/get-cookies";
 
+export const metadata = {
+  title: "TO"
+}
+
 const handleLogin = async (state) => {
   const sessionId =  getCookies();
   console.log(`sessionId from singpass page: ${sessionId}`)
