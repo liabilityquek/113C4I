@@ -17,6 +17,7 @@ export default async function Dashboard() {
   } 
 
   const userName = session?.user?.name;
+  const userEmail = session?.user?.email;
   const response = await fetch(`${NEXTAUTH_URL}/api/auth-admin`)
   const data = await response.json()
   console.log(`data: ${JSON.stringify(data, null, 2)}`)
@@ -29,7 +30,7 @@ export default async function Dashboard() {
 
   return (
     <>
-      {data && data[0] && data[0].name === userName ? (
+      {data && data[0] && data[0].email === userName ? (
         <>
           <h1>Rendering Manual login</h1>
           <div className="mt-8">
