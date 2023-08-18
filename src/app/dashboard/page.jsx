@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { LogoutButton } from '@/components/button.component'
+import Header from '@/components/navbar.component';
 
 export const metadata = {
   title: "Dashboard"
@@ -30,14 +30,12 @@ export default async function Dashboard() {
 
   return (
     <>
-      {data && data[0] && data[0].email === userName ? (
+    <Header />
+      {data && data[0] && data[0].email === userEmail ? (
         <>
           <h1>Rendering Manual login</h1>
           <div className="mt-8">
             {userName ? <p className="mb-3">Welcome: {userName}</p> : null}
-          </div>
-          <div className="w-full grid grid-cols-2 py-2 gap-4">
-            <LogoutButton />
           </div>
         </>
       ) : (
@@ -49,9 +47,6 @@ export default async function Dashboard() {
               <p className="mb-3">Password: {maskData('S1234567X')}</p>
             </>
             : null}
-          </div>
-          <div className="w-full grid grid-cols-2 py-2 gap-4">
-            <LogoutButton />
           </div>
         </>
       )}
