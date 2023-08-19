@@ -22,7 +22,7 @@ export default function Header() {
         isAdmin()
     }, [])
 
-    console.log(`navbar: ${user?.email}`)
+    console.log(`navbar: ${user?.name}`)
 
     return (
         <nav className="bg-white border-b-4 border-gray-200">
@@ -52,7 +52,7 @@ export default function Header() {
                                 Drivers
                             </Link>
                         </li>
-                        {res && res[0] && res[0].email === user?.email ? (
+                        {res && res[0] && res[0].name === user?.name ? (
                             <>
                                 <li className="mb-3">
                                     <Link href="/calendar" className="font-bold text-black hover:underline">

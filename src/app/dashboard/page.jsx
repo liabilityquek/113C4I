@@ -31,7 +31,7 @@ export default async function Dashboard() {
   return (
     <>
     <Header />
-      {data && data[0] && data[0].email === userEmail ? (
+      {data && data[0] && data[0].name === userName ? (
         <>
           <h1>Rendering Manual login</h1>
           <div className="mt-8">

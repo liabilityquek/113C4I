@@ -4,62 +4,73 @@ model Session {
 }
 
 model Vehicle {
-  id                 Int               @id @default(autoincrement())
-  veh_no             String
-  veh_type           VehicleType
-  veh_damages        String
-  veh_damages_images Bytes[]
-  to                 TO                @relation(fields: [toId], references: [id])
-  toId               Int
-  veh_movement       VehicleMovement[]
+  id       Int         @id @default(autoincrement())
+  veh_no   String
+  veh_type VehicleType
+  to       TO          @relation(fields: [toId], references: [id])
+  toId     Int
 }
 
 model TO {
-  id                  Int               @id @default(autoincrement())
-  name                String            @unique
-  contact             String            @unique
-  next_of_kin_name    String            @unique
-  next_of_kin_contact String            @unique
+  id                  Int             @id @default(autoincrement())
+  name                String          @unique
+  contact             String          @unique
+  next_of_kin_name    String          @unique
+  next_of_kin_contact String          @unique
   rank                String
   vehicles            Vehicle[]
-  veh_damages         String
-  veh_damages_images  Bytes[]
-  moving_out_seq      Int
   book_out            BookOutTiming[]
-  veh_movement        VehicleMovement[]
+  updateHistory       UpdateHistory[]
+  notification        Notification[]
+}
+
+model UpdateHistory {
+  id            Int      @id @default(autoincrement())
+  toId          Int
+  updatedByTo   Int?
+  updatedByUser Int?
+  fields        Json
+  beforeValues  Json
+  afterValues   Json
+  updatedAt     DateTime
+  to            TO       @relation(fields: [toId], references: [id])
+  User          User?    @relation(fields: [userId], references: [id])
+  userId        Int?
 }
 
 model BookOutTiming {
   id       Int      @id @default(autoincrement())
   book_out DateTime
   book_in  DateTime
+  comments String?
   to       TO       @relation(fields: [toId], references: [id])
   toId     Int
-}
-
-model VehicleMovement {
-  id        Int      @id @default(autoincrement())
-  move_out  DateTime
-  to        TO       @relation(fields: [toId], references: [id])
-  toId      Int
-  vehicle   Vehicle  @relation(fields: [vehicleId], references: [id])
-  vehicleId Int
+  status Status
 }
 
 model User {
-  id          Int           @id @default(autoincrement())
-  email       String        @unique
-  password    String        @unique
-  name        String        @unique
-  userSession UserSession[]
+  id            Int             @id @default(autoincrement())
+  email         String          @unique
+  password      String          @unique
+  name          String          @unique
+  updateHistory UpdateHistory[]
+  notification  Notification[]
 }
 
-model UserSession {
-  id           Int    @id @default(autoincrement())
-  key          String
-  session_data String
-  userId       Int
-  user         User   @relation(fields: [userId], references: [id])
+model Notification {
+  id      Int              @id @default(autoincrement())
+  toId    Int?
+  adminId Int? // assuming that Admin details are stored in User model
+  message String
+  sentAt  DateTime
+  to      TO?              @relation(fields: [toId], references: [id])
+  admin   User?            @relation(fields: [adminId], references: [id])
+  type    NotificationType
+}
+
+enum NotificationType {
+  BOOK_OUT_REQUEST
+  BOOK_OUT_APPROVAL
 }
 
 enum VehicleType {
@@ -72,10 +83,15 @@ enum VehicleType {
   GP
 }
 
-enum Status {
+enum Deferred {
   DEFERRED
-  ACTIVE
-  ABSENT
+  PRESENT
+}
+
+enum Status {
+  PENDING   
+  APPROVED
+  REJECTED
 }
 
 datasource db {
