@@ -22,6 +22,7 @@ model TO {
   book_out            BookOutTiming[]
   updateHistory       UpdateHistory[]
   notification        Notification[]
+  availability        Availability
 }
 
 model UpdateHistory {
@@ -45,7 +46,7 @@ model BookOutTiming {
   comments String?
   to       TO       @relation(fields: [toId], references: [id])
   toId     Int
-  status Status
+  status   Status
 }
 
 model User {
@@ -60,7 +61,7 @@ model User {
 model Notification {
   id      Int              @id @default(autoincrement())
   toId    Int?
-  adminId Int? // assuming that Admin details are stored in User model
+  adminId Int?
   message String
   sentAt  DateTime
   to      TO?              @relation(fields: [toId], references: [id])
@@ -83,13 +84,13 @@ enum VehicleType {
   GP
 }
 
-enum Deferred {
+enum Availability {
   DEFERRED
   PRESENT
 }
 
 enum Status {
-  PENDING   
+  PENDING
   APPROVED
   REJECTED
 }
