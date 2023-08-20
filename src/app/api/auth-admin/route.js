@@ -10,7 +10,7 @@ export async function GET(request) {
     });
 
     if(users){
-      return new NextResponse(JSON.stringify(users));
+      return new NextResponse([JSON.stringify(users)]);
     }
   } catch (e) {
     return NextResponse.error(`Error getting users: ${e}`);

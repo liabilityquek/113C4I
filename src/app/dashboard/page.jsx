@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Header from '@/components/navbar.component';
+import checkAdmin from '@/lib/checkAdmin';
 
 export const metadata = {
   title: "Dashboard"
@@ -18,9 +19,7 @@ export default async function Dashboard() {
 
   const userName = session?.user?.name;
   const userEmail = session?.user?.email;
-  const response = await fetch(`${NEXTAUTH_URL}/api/auth-admin`)
-  const data = await response.json()
-  console.log(`data: ${JSON.stringify(data, null, 2)}`)
+  const isAdmin = await checkAdmin(userName)
 
   const maskData = (password) => {
     const maskedPortion = password.slice(0, 3)
@@ -31,7 +30,7 @@ export default async function Dashboard() {
   return (
     <>
     <Header />
-      {data && data[0] && data[0].name === userName ? (
+      {isAdmin ? (
         <>
           <h1>Rendering Manual login</h1>
           <div className="mt-8">

@@ -9,7 +9,7 @@ const sendEmail = require("./sendgrid");
 
 const createUser = async (req, res) => {
     const { email, password, name, role } = req.body;
-    console.log(`check body: ${send.stringify(req.body, null, 2)}`)
+    console.log(`check body: ${JSON.stringify(req.body, null, 2)}`)
     try {
         const schema = Yup.object().shape({
             email: Yup.string()

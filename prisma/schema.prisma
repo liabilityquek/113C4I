@@ -23,6 +23,7 @@ model TO {
   updateHistory       UpdateHistory[]
   notification        Notification[]
   availability        Availability
+  avatar              Bytes[]
 }
 
 model UpdateHistory {

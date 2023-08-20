@@ -4,20 +4,21 @@ import { useSession } from "next-auth/react";
 import LogoutButton from './button.component'
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import checkAdmin from '@/lib/checkAdmin';
 
 const NEXT_PUBLIC_NEXTAUTH_URL = process.env.NEXT_PUBLIC_NEXTAUTH_URL
 
 export default function Header() {
     const { data: session } = useSession();
     const user = session?.user;
+    const userName = user?.name
     const [res, setRes] = useState(null)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
 
     useEffect(() => {
         async function isAdmin() {
-            const response = await fetch(`${NEXT_PUBLIC_NEXTAUTH_URL}/api/auth-admin`)
-            const data = await response.json()
-            setRes(data)
+            const result = await checkAdmin(userName)
+            setRes(result)
         }
         isAdmin()
     }, [])
@@ -52,7 +53,7 @@ export default function Header() {
                                 Drivers
                             </Link>
                         </li>
-                        {res && res[0] && res[0].name === user?.name ? (
+                        {res ? (
                             <>
                                 <li className="mb-3">
                                     <Link href="/calendar" className="font-bold text-black hover:underline">
