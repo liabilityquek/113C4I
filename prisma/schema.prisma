@@ -5,10 +5,10 @@ model Session {
 
 model Vehicle {
   id       Int         @id @default(autoincrement())
-  veh_no   String
+  veh_no   String      @unique
   veh_type VehicleType
-  to       TO          @relation(fields: [toId], references: [id])
-  toId     Int
+  to       TO?         @relation(fields: [toId], references: [id], onDelete: SetNull)
+  toId     Int?
 }
 
 model TO {
