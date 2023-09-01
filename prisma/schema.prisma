@@ -41,13 +41,13 @@ model UpdateHistory {
 }
 
 model BookOutTiming {
-  id       Int      @id @default(autoincrement())
-  book_out DateTime
-  book_in  DateTime
-  comments String?
-  to       TO       @relation(fields: [toId], references: [id])
-  toId     Int
-  status   Status
+  id             Int      @id @default(autoincrement())
+  book_out       DateTime
+  book_in        DateTime
+  comments       String?
+  to             TO       @relation(fields: [toId], references: [id])
+  toId           Int
+  bookout_status Status
 }
 
 model User {
