@@ -23,7 +23,7 @@ CREATE TABLE "Vehicle" (
     "id" SERIAL NOT NULL,
     "veh_no" TEXT NOT NULL,
     "veh_type" "VehicleType" NOT NULL,
-    "toId" INTEGER NOT NULL,
+    "toId" INTEGER,
 
     CONSTRAINT "Vehicle_pkey" PRIMARY KEY ("id")
 );
@@ -92,6 +92,9 @@ CREATE TABLE "Notification" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Vehicle_veh_no_key" ON "Vehicle"("veh_no");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "TO_name_key" ON "TO"("name");
 
 -- CreateIndex
@@ -113,7 +116,7 @@ CREATE UNIQUE INDEX "User_password_key" ON "User"("password");
 CREATE UNIQUE INDEX "User_name_key" ON "User"("name");
 
 -- AddForeignKey
-ALTER TABLE "Vehicle" ADD CONSTRAINT "Vehicle_toId_fkey" FOREIGN KEY ("toId") REFERENCES "TO"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Vehicle" ADD CONSTRAINT "Vehicle_toId_fkey" FOREIGN KEY ("toId") REFERENCES "TO"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "UpdateHistory" ADD CONSTRAINT "UpdateHistory_toId_fkey" FOREIGN KEY ("toId") REFERENCES "TO"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

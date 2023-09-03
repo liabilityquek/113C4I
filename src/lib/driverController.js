@@ -2,6 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const Yup = require("yup");
 
+//CREATE DRIVER PROFILE
 const createDriver = async (req, res) => {
     const {
         name,
@@ -9,7 +10,7 @@ const createDriver = async (req, res) => {
         next_of_kin_name,
         next_of_kin_contact,
         rank,
-        vehicles,
+        TOs,
         availability,
         avatar
     } = req.body;
@@ -36,9 +37,9 @@ const createDriver = async (req, res) => {
             avatar
         };
 
-        if (vehicles && vehicles.length) {
-            createData.vehicles = {
-                connect: vehicles.map(id => ({ id }))
+        if (TOs && TOs.length) {
+            createData.TOs = {
+                connect: TOs.map(id => ({ id }))
             };
         }
 
@@ -58,8 +59,56 @@ const createDriver = async (req, res) => {
     }
 }
 
+//AMEND DRIVER DETAILS
+const amendDriver = async (req, res) => {
+    const {
+        name,
+        contact,
+        next_of_kin_name,
+        next_of_kin_contact,
+        rank,
+        availability,
+        avatar
+    } = req.body;
+
+    const { id } = req.params
+
+    try {
+        const schema = Yup.object().shape({
+            name: Yup.string(),
+            contact: Yup.string(),
+            next_of_kin_name: Yup.string(),
+            next_of_kin_contact: Yup.string(),
+            rank: Yup.string(),
+            availability: Yup.string(),
+        });
+
+        await schema.validate(req.body);
+
+        const editDriver = await prisma.TO.update({
+            where: { id: Number(id) },
+            data: {
+                name,
+                contact,
+                next_of_kin_name,
+                next_of_kin_contact,
+                rank,
+                availability,
+                avatar
+            }
+        })
+        res.status(200).json({ message: "TO successfully amended!", editDriver });
+
+    } catch (e) {
+        if (e instanceof Yup.ValidationError) {
+            return res.status(400).send(`Validation error: ${e}`);
+        } else {
+            return res.status(400).send(`Error amending profile: ${e}`);
+        }
+    }
+}
 
 module.exports = {
     createDriver,
-
+    amendDriver
 };

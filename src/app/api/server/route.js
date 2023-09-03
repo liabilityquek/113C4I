@@ -4,8 +4,8 @@ const port = 4000;
 const path = require("path");
 const cors = require('cors');
 const { createUser, resetPassword } = require('../../../lib/userController');
-const { createDriver } = require('../../../lib/driverController');
-const { createVehicle } = require('../../../lib/vehicleController');
+const { createDriver, amendDriver } = require('../../../lib/driverController');
+const { createVehicle, amendVehicle, tagVehicle } = require('../../../lib/vehicleController');
 
 const NEXTAUTH_URL = process.env.NEXT_PUBLIC_NEXTAUTH_URL
 
@@ -29,6 +29,9 @@ app.post("/api/server/user", createUser);
 app.post("/api/server/reset-password", resetPassword);
 app.post("/api/server/create-driver", createDriver);
 app.post("/api/server/create-vehicle", createVehicle);
+app.put("/api/server/amend-vehicle/:vehicleId", amendVehicle);
+app.put("/api/server/amend-driver/:id", amendDriver);
+app.patch("/api/server/tag-vehicle/:vehicleId", tagVehicle);
 
 app.listen(port, () => {
   console.log(`113C4I app listening on port ${port}`);
