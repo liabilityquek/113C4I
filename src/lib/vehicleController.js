@@ -12,7 +12,7 @@ const createVehicle = async (req, res) => {
     try {
 
         const schema = Yup.object().shape({
-            veh_no: Yup.string().required(),
+            veh_no: Yup.string().length(5, 'Vehicle number must be exactly 5 characters long').required(),
             veh_type: Yup.string().required(),
         });
 
@@ -47,7 +47,7 @@ const amendVehicle = async (req, res) => {
 
     try {
         const schema = Yup.object().shape({
-            veh_no: Yup.string().required(),
+            veh_no: Yup.string().length(5, 'Vehicle number must be exactly 5 characters long').required(),
             veh_type: Yup.string().required(),
         });
 
