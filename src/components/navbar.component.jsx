@@ -49,7 +49,7 @@ export default function Header() {
                             <Link href="/vehicle" className="font-bold text-black hover:underline">Vehicles</Link>
                         </li>
                         <li className="mb-3">
-                            <Link href="/driver" className="font-bold text-black hover:underline" prefetch={false}>
+                            <Link href="/driver" className="font-bold text-black hover:underline">
                                 Drivers
                             </Link>
                         </li>

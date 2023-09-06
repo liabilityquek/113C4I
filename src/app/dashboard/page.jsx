@@ -3,6 +3,7 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Header from '@/components/navbar.component';
 import checkAdmin from '@/lib/checkAdmin';
+import DashboardComponents from '@/components/dashboard.component';
 
 export const metadata = {
   title: "Dashboard"
@@ -30,6 +31,7 @@ export default async function Dashboard() {
   return (
     <>
     <Header />
+    <DashboardComponents />
       {isAdmin ? (
         <>
           <h1>Rendering Manual login</h1>

@@ -10,10 +10,12 @@
     "server": "node src/app/api/server/route.js"
   },
   "dependencies": {
+    "@heroicons/react": "^1.0.6",
     "@opengovsg/sgid-client": "^2.0.0",
     "@prisma/client": "^5.1.1",
     "@sendgrid/mail": "^7.7.0",
     "@supabase/supabase-js": "^2.32.0",
+    "@tremor/react": "^3.7.2",
     "@types/node": "20.1.2",
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
