@@ -36,7 +36,7 @@ const AdminLoginForm = () => {
                 callbackUrl,
             });
 
-            setLoading(false);
+            setLoading(true);
 
             console.log(response);
             if (!response?.error) {

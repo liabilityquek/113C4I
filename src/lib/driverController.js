@@ -19,9 +19,9 @@ const createDriver = async (req, res) => {
 
         const schema = Yup.object().shape({
             name: Yup.string().required(),
-            contact: Yup.string().required(),
+            contact: Yup.string().length(8, 'Contact no must be 8 characters long').required(),
             next_of_kin_name: Yup.string().required(),
-            next_of_kin_contact: Yup.string().required(),
+            next_of_kin_contact: Yup.string().length(8, 'Contact no must be 8 characters long').required(),
             rank: Yup.string().required(),
             availability: Yup.string().required(),
         });
@@ -59,7 +59,7 @@ const createDriver = async (req, res) => {
     }
 }
 
-//AMEND DRIVER DETAILS
+//AMEND DRIVER DETAILS AND APPEND CHANGES TO UPDATE HISTORY, IF AVAILABILITY CHANGES TO DEFERRED, REMOVE VEHICLE TAGGING
 const amendDriver = async (req, res) => {
     const {
         name,
@@ -71,19 +71,46 @@ const amendDriver = async (req, res) => {
         avatar
     } = req.body;
 
-    const { id } = req.params
+    const { id, userId } = req.params
+
+    const getUserId = await prisma.User.findUnique({
+        where: { id: Number(userId) }
+    })
+
+    if (!getUserId) {
+        return res.status(501).send("Error, Invalid User")
+    }
+
+    const driverId = await prisma.TO.findUnique({
+        where: { id: Number(id) }
+    })
+
+    if (!driverId) {
+        return res.status(501).send("Error, Driver profile not found")
+    }
 
     try {
         const schema = Yup.object().shape({
             name: Yup.string(),
-            contact: Yup.string(),
+            contact: Yup.string().length(8, 'Contact no must be 8 characters long'),
             next_of_kin_name: Yup.string(),
-            next_of_kin_contact: Yup.string(),
+            next_of_kin_contact: Yup.string().length(8, 'Contact no must be 8 characters long'),
             rank: Yup.string(),
             availability: Yup.string(),
         });
 
         await schema.validate(req.body);
+
+        // Capture old values
+        const oldValues = {
+            name: driverId.name,
+            contact: driverId.contact,
+            next_of_kin_name: driverId.next_of_kin_name,
+            next_of_kin_contact: driverId.next_of_kin_contact,
+            rank: driverId.rank,
+            availability: driverId.availability,
+            avatar: driverId.avatar,
+        };
 
         const editDriver = await prisma.TO.update({
             where: { id: Number(id) },
@@ -97,18 +124,101 @@ const amendDriver = async (req, res) => {
                 avatar
             }
         })
-        res.status(200).json({ message: "TO successfully amended!", editDriver });
 
-    } catch (e) {
-        if (e instanceof Yup.ValidationError) {
-            return res.status(400).send(`Validation error: ${e}`);
-        } else {
-            return res.status(400).send(`Error amending profile: ${e}`);
+        // Capture new values
+        const newValues = {
+            name,
+            contact,
+            next_of_kin_name,
+            next_of_kin_contact,
+            rank,
+            availability,
+            avatar,
+        };
+
+        //Identify which fields have been changed
+        const changedFields = Object.keys(newValues).filter(key => {
+            return newValues[key] !== oldValues[key];
+        })
+
+        // Proceed if there are changed fields
+        if (changedFields.length > 0) {
+            const beforeValues = {}
+            const afterValues = {}
+
+            // Get before and after values for changed fields
+            changedFields.forEach(field => {
+                beforeValues[field] = oldValues[field]
+                afterValues[field] = newValues[field]
+            })
+
+            await prisma.updateHistory.create({
+                data: {
+                    updatedByUser: Number(userId),
+                    toId: Number(id),
+                    fields: JSON.stringify(changedFields),
+                    beforeValues: JSON.stringify(beforeValues),
+                    afterValues: JSON.stringify(afterValues),
+                    updatedAt: new Date(),
+                }
+            })
+
+            res.status(200).send({ message: "TO successfully amended!", editDriver });
+
+            if (editDriver.availability === 'DEFERRED') {
+                await prisma.vehicle.updateMany({
+                    where: { toId: Number(id) },
+                    data: { toId: null }
+                })
+            }
+        }
+
+        } catch (e) {
+            if (e instanceof Yup.ValidationError) {
+                return res.status(400).send(`Validation error: ${e}`);
+            } else {
+                return res.status(400).send(`Error amending profile: ${e}`);
+            }
         }
     }
-}
 
-module.exports = {
-    createDriver,
-    amendDriver
-};
+
+//DELETE DRIVER PROFILE AND DELTE UPDATE HISTORY, IF VEHICLE WAS PREVIOUSLY TAGGED TO THE DRIVER, THEN VEHICLE TAGGING WILL BE REMOVED AS WELL
+
+const deleteDriver = async (req, res) => {
+        const { id } = req.params
+
+        const driverId = await prisma.TO.findUnique({
+            where: { id: Number(id) }
+        })
+
+        if (!driverId) {
+            return res.status(501).send("Error, Driver profile not found")
+        }
+
+        try {
+
+            await prisma.UpdateHistory.deleteMany({
+                where: { toId: Number(id) }
+            })
+
+            await prisma.Vehicle.updateMany({
+                where: { toId: Number(id) },
+                data: { toId: null }
+            })
+            const removeDriverProfile = await prisma.TO.delete({
+                where: { id: Number(id) }
+            })
+            res.status(200).send({ message: 'Driver profile successfully deleted!', removeDriverProfile })
+
+
+        } catch (e) {
+            return res.status(503).send(`Removing driver profile unsuccessfully: ${e}`);
+        }
+    }
+
+    module.exports = {
+        createDriver,
+        amendDriver,
+        deleteDriver
+    };
