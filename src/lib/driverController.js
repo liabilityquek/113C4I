@@ -138,8 +138,8 @@ const amendDriver = async (req, res) => {
 
         //Identify which fields have been changed
         const changedFields = Object.keys(newValues).filter(key => {
-            if (Array.isArray(newValues[key]) && Array.isArray(oldValues[key])) {
-                return JSON.stringify(newValues[key]) !== JSON.stringify(oldValues[key]);
+            if (Array.isArray(newValues[key]) && Array.isArray(oldValues[key]) && newValues[key].length === 0 && oldValues[key].length === 0) {
+                    return false;
             }
             return newValues[key] !== oldValues[key];
         })

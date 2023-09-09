@@ -30,8 +30,8 @@ const getUpdatesHistory = async (req, res) => {
         if (driverUpdates && driverUpdates.length > 0) {
             const response = driverUpdates.map(update => ({
                 updatedAt: update.updatedAt,
-                beforeValues: update.beforeValues ? JSON.parse(update.beforeValues) : null,
-                afterValues: update.afterValues ? JSON.parse(update.afterValues) : null,
+                beforeValues: JSON.parse(update?.beforeValues),
+                afterValues: JSON.parse(update?.afterValues),
                 updateByUserName: update?.updatedByUser?.name,
                 updateByToName: update?.updatedByTo?.name
 
