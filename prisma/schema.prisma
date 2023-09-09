@@ -20,24 +20,25 @@ model TO {
   rank                String
   vehicles            Vehicle[]
   book_out            BookOutTiming[]
-  updateHistory       UpdateHistory[]
+  updateHistory       UpdateHistory[] @relation("UpdatedByToRelation")
+  updateToHistory     UpdateHistory[] @relation("TOUpdateHistoryToRelation")
   notification        Notification[]
   availability        Availability
   avatar              Bytes[]
 }
 
 model UpdateHistory {
-  id            Int      @id @default(autoincrement())
-  toId          Int
-  updatedByTo   Int?
-  updatedByUser Int?
-  fields        Json
-  beforeValues  Json
-  afterValues   Json
-  updatedAt     DateTime
-  to            TO       @relation(fields: [toId], references: [id])
-  User          User?    @relation(fields: [userId], references: [id])
-  userId        Int?
+  id              Int      @id @default(autoincrement())
+  toId            Int
+  updatedByTo     TO?      @relation(fields: [updatedByToId], references: [id], name: "UpdatedByToRelation")
+  updatedByToId   Int?
+  updatedByUser   User?    @relation(fields: [updatedByUserId], references: [id], name: "UpdatedByUserRelation")
+  updatedByUserId Int?
+  fields          Json
+  beforeValues    Json
+  afterValues     Json
+  updatedAt       DateTime
+  to              TO       @relation(fields: [toId], references: [id], name: "TOUpdateHistoryToRelation")
 }
 
 model BookOutTiming {
@@ -55,7 +56,7 @@ model User {
   email         String          @unique
   password      String          @unique
   name          String          @unique
-  updateHistory UpdateHistory[]
+  updateHistory UpdateHistory[] @relation("UpdatedByUserRelation")
   notification  Notification[]
 }
 

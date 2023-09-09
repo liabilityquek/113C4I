@@ -11,14 +11,30 @@ const getUpdatesHistory = async (req, res) => {
             where: { toId: Number(toId) },
             select: {
                 updatedAt: true,
-                afterValues: true
+                afterValues: true,
+                beforeValues: true,
+                updatedByTo: {
+                    select: {
+                        name: true
+                    },
+                },
+                updatedByUser: {
+                    select: {
+                        name: true,
+                    }
+                }
             }
         });
+
 
         if (driverUpdates && driverUpdates.length > 0) {
             const response = driverUpdates.map(update => ({
                 updatedAt: update.updatedAt,
-                afterValues: JSON.parse(update.afterValues) 
+                beforeValues: update.beforeValues ? JSON.parse(update.beforeValues) : null,
+                afterValues: update.afterValues ? JSON.parse(update.afterValues) : null,
+                updateByUserName: update?.updatedByUser?.name,
+                updateByToName: update?.updatedByTo?.name
+
             }));
             res.status(200).send(response);
         } else {

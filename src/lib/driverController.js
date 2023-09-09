@@ -127,17 +127,20 @@ const amendDriver = async (req, res) => {
 
         // Capture new values
         const newValues = {
-            name,
-            contact,
-            next_of_kin_name,
-            next_of_kin_contact,
-            rank,
-            availability,
-            avatar,
+            name: editDriver.name,
+            contact: editDriver.contact,
+            next_of_kin_name: editDriver.next_of_kin_name,
+            next_of_kin_contact: editDriver.next_of_kin_contact,
+            rank: editDriver.rank,
+            availability: editDriver.availability,
+            avatar: editDriver.avatar,
         };
 
         //Identify which fields have been changed
         const changedFields = Object.keys(newValues).filter(key => {
+            if (Array.isArray(newValues[key]) && Array.isArray(oldValues[key])) {
+                return JSON.stringify(newValues[key]) !== JSON.stringify(oldValues[key]);
+            }
             return newValues[key] !== oldValues[key];
         })
 
@@ -154,7 +157,7 @@ const amendDriver = async (req, res) => {
 
             await prisma.updateHistory.create({
                 data: {
-                    updatedByUser: Number(userId),
+                    updatedByUserId: Number(userId),
                     toId: Number(id),
                     fields: JSON.stringify(changedFields),
                     beforeValues: JSON.stringify(beforeValues),
@@ -173,52 +176,52 @@ const amendDriver = async (req, res) => {
             }
         }
 
-        } catch (e) {
-            if (e instanceof Yup.ValidationError) {
-                return res.status(400).send(`Validation error: ${e}`);
-            } else {
-                return res.status(400).send(`Error amending profile: ${e}`);
-            }
+    } catch (e) {
+        if (e instanceof Yup.ValidationError) {
+            return res.status(400).send(`Validation error: ${e}`);
+        } else {
+            return res.status(400).send(`Error amending profile: ${e}`);
         }
     }
+}
 
 
 //DELETE DRIVER PROFILE AND DELTE UPDATE HISTORY, IF VEHICLE WAS PREVIOUSLY TAGGED TO THE DRIVER, THEN VEHICLE TAGGING WILL BE REMOVED AS WELL
 
 const deleteDriver = async (req, res) => {
-        const { id } = req.params
+    const { id } = req.params
 
-        const driverId = await prisma.TO.findUnique({
-            where: { id: Number(id) }
-        })
+    const driverId = await prisma.TO.findUnique({
+        where: { id: Number(id) }
+    })
 
-        if (!driverId) {
-            return res.status(501).send("Error, Driver profile not found")
-        }
-
-        try {
-
-            await prisma.UpdateHistory.deleteMany({
-                where: { toId: Number(id) }
-            })
-
-            await prisma.Vehicle.updateMany({
-                where: { toId: Number(id) },
-                data: { toId: null }
-            })
-            const removeDriverProfile = await prisma.TO.delete({
-                where: { id: Number(id) }
-            })
-            res.status(200).send({ message: 'Driver profile successfully deleted!', removeDriverProfile })
-
-
-        } catch (e) {
-            return res.status(503).send(`Removing driver profile unsuccessfully: ${e}`);
-        }
+    if (!driverId) {
+        return res.status(501).send("Error, Driver profile not found")
     }
 
-    module.exports = {
-        createDriver,
-        amendDriver,
-        deleteDriver
-    };
+    try {
+
+        await prisma.UpdateHistory.deleteMany({
+            where: { toId: Number(id) }
+        })
+
+        await prisma.Vehicle.updateMany({
+            where: { toId: Number(id) },
+            data: { toId: null }
+        })
+        const removeDriverProfile = await prisma.TO.delete({
+            where: { id: Number(id) }
+        })
+        res.status(200).send({ message: 'Driver profile successfully deleted!', removeDriverProfile })
+
+
+    } catch (e) {
+        return res.status(503).send(`Removing driver profile unsuccessfully: ${e}`);
+    }
+}
+
+module.exports = {
+    createDriver,
+    amendDriver,
+    deleteDriver
+};
