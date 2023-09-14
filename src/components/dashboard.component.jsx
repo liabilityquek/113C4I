@@ -1,49 +1,101 @@
 'use client';
 
 import { Card, Metric, Text, Title, BarList, Flex, Grid } from '@tremor/react';
+import { useState, useEffect } from 'react'
 
-const website = [
-  { name: '/home', value: 1230 },
-  { name: '/contact', value: 751 },
-  { name: '/gallery', value: 471 },
-  { name: '/august-discount-offer', value: 280 },
-  { name: '/case-studies', value: 78 }
-];
+const NEXT_PUBLIC_NEXTAUTH_URL = process.env.NEXT_PUBLIC_NEXTAUTH_URL
 
-const shop = [
-  { name: '/home', value: 453 },
-  { name: '/imprint', value: 351 },
-  { name: '/shop', value: 271 },
-  { name: '/pricing', value: 191 }
-];
+export default function DashBoardFigures() {
+  const [loading, setLoading] = useState(false);
 
-const app = [
-  { name: '/shop', value: 789 },
-  { name: '/product-features', value: 676 },
-  { name: '/about', value: 564 },
-  { name: '/login', value: 234 },
-  { name: '/downloads', value: 191 }
-];
+  const [driver, setDriver] = useState([
+    { name: 'Present', value: 0 },
+    { name: 'Deferred', value: 0 },
+  ]);
 
-const data = [
-  {
-    category: 'Website',
-    stat: '10,234',
-    data: website
-  },
-  {
-    category: 'Online Shop',
-    stat: '12,543',
-    data: shop
-  },
-  {
-    category: 'Mobile App',
-    stat: '2,543',
-    data: app
-  }
-];
+  const [vehicle, setVehicle] = useState([
+    { name: '5-Ton', value: 0 },
+    { name: 'OUV', value: 0 },
+    { name: 'SOUV', value: 0 },
+    { name: 'CP', value: 0 },
+    { name: 'FSD', value: 0 },
+    { name: 'PSD', value: 0 },
+    { name: 'GP', value: 0 },
+  ]);
+  
+  useEffect(() => {
+    const fetchIndividualDriverData = async (name, index) => {
+      try {
+        const response = await fetch(`${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-driver-count`)
+        const data = await response.json()
+        console.log(`data: ${data}`)
+        setDriver((prev) => {
+          const newArr = [...prev];
+          newArr[index].value = data;
+          return newArr
+        })
+      } catch (e) {
+        console.error(`Error fetching driver data: ${e}`)
+      }
+    }
+    driver.forEach((item, index) => {
+      fetchIndividualDriverData(item.name, index)
+    })
+  }, [])
 
-export default function PlaygroundPage() {
+  useEffect(() => {
+    const fetchIndividualVehicleData = async (name, index) => {
+      try {
+        const response = await fetch(`${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-vehicle-count`);
+        // const response = await fetch(`${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-vehicle-${name.toLowerCase().replace('-', '')}-count`);
+        const data = await response.json();
+        setVehicle((prev) => {
+          const newArr = [...prev];
+          newArr[index].value = data;
+          return newArr
+        })
+      } catch (e) {
+        console.error(`Error fetching vehicle data: ${e}`)
+      }
+    }
+    vehicle.forEach((item, index) => {
+      fetchIndividualVehicleData(item.name, index)
+    })
+  }, [])
+
+  const [data, setData] = useState([
+    {
+      category: 'Drivers',
+      stat: '0',
+      data: driver,
+      url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-driver-count`,
+    },
+    {
+      category: 'Vehicles',
+      stat: '0',
+      data: vehicle,
+      url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-driver-count`,
+    },
+
+  ])
+  useEffect(() => {
+    const fetchData = async () => {
+      const newData = [];
+      try {
+      for (let item of data) {
+          const response = await fetch(item.url)
+          const statData = await response.text();
+          newData.push({ ...item, stat: statData })
+        } }
+        catch (e) {
+          console.error('Error fetching data: ', e)
+        }
+        setData(newData)
+      }
+      fetchData()
+    },[])
+
+
   return (
     <main className="p-4 md:p-10 mx-auto max-w-7xl">
       <Grid numItemsSm={2} numItemsLg={3} className="gap-6">
@@ -56,11 +108,12 @@ export default function PlaygroundPage() {
               className="space-x-2"
             >
               <Metric>{item.stat}</Metric>
-              <Text>Total views</Text>
+              {console.log(`stat: ${typeof(item.stat)}`)}
+              <Text>Total Count</Text>
             </Flex>
             <Flex className="mt-6">
-              <Text>Pages</Text>
-              <Text className="text-right">Views</Text>
+              <Text>Field</Text>
+              <Text className="text-right">Count</Text>
             </Flex>
             <BarList
               data={item.data}
