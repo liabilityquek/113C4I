@@ -9,18 +9,18 @@ export default function DashBoardFigures() {
   const [loading, setLoading] = useState(false);
 
   const [driver, setDriver] = useState([
-    { name: 'Present', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-driver-count` },
-    { name: 'Deferred', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-driver-count` },
+    { name: 'Present', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-present-count` },
+    { name: 'Deferred', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-deferred-count` },
   ]);
 
   const [vehicle, setVehicle] = useState([
-    { name: '5-Ton', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-vehicle-count` },
-    { name: 'OUV', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-vehicle-count` },
-    { name: 'SOUV', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-vehicle-count` },
-    { name: 'CP', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-vehicle-count` },
-    { name: 'FSD', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-vehicle-count` },
-    { name: 'PSD', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-vehicle-count` },
-    { name: 'GP', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-vehicle-count` },
+    { name: '5-Ton', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-fiveton-count` },
+    { name: 'OUV', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-ouv-count` },
+    { name: 'SOUV', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-souv-count` },
+    { name: 'CP', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-cp-count` },
+    { name: 'FSD', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-fsd-count` },
+    { name: 'PSD', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-psd-count` },
+    { name: 'GP', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-gp-count` },
   ]);
 
   const [data, setData] = useState([
