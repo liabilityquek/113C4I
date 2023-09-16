@@ -10,7 +10,8 @@
     "server": "node src/app/api/server/route.js"
   },
   "dependencies": {
-    "@heroicons/react": "^1.0.6",
+    "@headlessui/react": "^1.7.17",
+    "@heroicons/react": "^2.0.18",
     "@opengovsg/sgid-client": "^2.0.0",
     "@prisma/client": "^5.1.1",
     "@sendgrid/mail": "^7.7.0",

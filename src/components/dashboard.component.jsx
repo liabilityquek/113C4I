@@ -14,7 +14,7 @@ export default function DashBoardFigures() {
   ]);
 
   const [vehicle, setVehicle] = useState([
-    { name: '5-Ton', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-fiveton-count` },
+    { name: '5-TON', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-fiveton-count` },
     { name: 'OUV', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-ouv-count` },
     { name: 'SOUV', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-souv-count` },
     { name: 'CP', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-cp-count` },
