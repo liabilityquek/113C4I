@@ -23,6 +23,16 @@ export default function DashBoardFigures() {
     { name: 'GP', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-gp-count` },
   ]);
 
+  const [vehicleTypeDriverCount, setVehicleTypeDriverCount] = useState([
+    { name: '5-TON', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-driver-fiveton-count` },
+    { name: 'OUV', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-driver-ouv-count` },
+    { name: 'SOUV', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-driver-souv-count` },
+    { name: 'CP', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-driver-cp-count` },
+    { name: 'FSD', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-driver-fsd-count` },
+    { name: 'PSD', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-driver-psd-count` },
+    { name: 'GP', value: 0, url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-driver-gp-count` },
+  ]);
+
   const [data, setData] = useState([
     {
       category: 'Drivers',
@@ -35,6 +45,12 @@ export default function DashBoardFigures() {
       stat: '0',
       data: vehicle,
       url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-vehicle-count`,
+    },
+    {
+      category: 'Drivers Trained Platform',
+      stat: '0',
+      data: vehicleTypeDriverCount,
+      url: `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-driver-platform`,
     },
 
   ])
@@ -52,7 +68,7 @@ export default function DashBoardFigures() {
             return newArr
           })
         } catch (err) {
-          console.log(`Error fetching driver data: ${e}`)
+          console.log(`Error fetching driver data: ${err}`)
         }
       }
     }
@@ -60,6 +76,7 @@ export default function DashBoardFigures() {
       setLoading(true)
       await fetchIndividualData(driver, setDriver)
       await fetchIndividualData(vehicle, setVehicle)
+      await fetchIndividualData(vehicleTypeDriverCount, setVehicleTypeDriverCount)
       const newData = [];
       for (let item of data) {
         try {

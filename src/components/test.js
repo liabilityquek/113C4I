@@ -1,1 +1,0 @@
-import image from '../assets/logo.png';
