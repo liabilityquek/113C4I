@@ -1,14 +1,11 @@
-import { marked } from "marked";
 import qs from "qs";
 
-const CMS_URL = process.env.CMS_URL || "https://nextjs-strapi-cms-45gnt.ondigitalocean.app";
+const NEXT_PUBLIC_NEXTAUTH_URL = process.env.NEXT_PUBLIC_NEXTAUTH_URL
 
-export const CACHE_TAG_REVIEWS = 'reviews';
-
-export async function getReview(slug) {
-  const { data } = await fetchReviews({
-    filters: { slug: { $eq: slug } },
-    fields: ["slug", "title", "body", "subtitle", "publishedAt"],
+export async function getDriver(name) {
+  const { data } = await fetchDrivers({
+    filters: { name: { $eq: name } },
+    fields: ["name", "title", "body", "subtitle", "publishedAt"],
     populate: {
       image: {
         fields: ["url"],
@@ -23,65 +20,58 @@ export async function getReview(slug) {
   const item = data[0];
   return {
     ...toReview(item),
-    body: marked(item.attributes.body, { headerIds: false, mangle: false }),
+    // body: marked(item.attributes.body, { headerIds: false, mangle: false }),
   };
 }
 
 export async function searchReview(query) {
-  const { data } = await fetchReviews({
-    filters: { slug: { $containsi: query } },
-    fields: ["slug", "title"],
+  const { data } = await fetchDrivers({
+    filters: { name: { $containsi: query } },
+    fields: ["name", "title"],
     sort: ["title"],
     pagination: { pageSize: 5, withCount: false },
   });
   return data.map(( { attributes }) => ({
-    slug: attributes.slug,
+    name: attributes.name,
     title: attributes.title,
   }))
 }
 
-export async function getAllReviews(pageSize, page) {
-  const { data, meta } = await fetchReviews({
-    fields: ["slug", "title", "subtitle", "publishedAt"],
-    populate: {
-      image: {
-        fields: ["url"],
-      },
-    },
-    sort: ["publishedAt:desc"],
-    pagination: { pageSize, page },
-  });
+export async function getAllDrivers(pageSize, page) {
+  const data = await fetchDrivers()
   return {
-    pageCount: meta.pagination.pageCount,
-    reviews: data.map(toReview),
+    pageCount: 1,
+    drivers: data,
   }
 }
 
-export async function getSlugs() {
-  const { data } = await fetchReviews({
-    fields: ["slug"],
+export async function getNames() {
+  const { data } = await fetchDrivers({
+    fields: ["name"],
     sort: ["publishedAt:desc"],
     pagination: { pageSize: 100 },
   });
-  return data.map((item) => item.attributes.slug);
+  return data.map((item) => item.attributes.name);
 }
 
-async function fetchReviews(parameters) {
+async function fetchDrivers(parameters) {
   const url =
-    `${CMS_URL}/api/reviews?` +
+    `${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-all-drivers?` +
     qs.stringify(parameters, {
       encodeValuesOnly: true,
     });
 
-  //   console.log("fetchReviews:", url);
+  //   console.log("fetchDrivers:", url);
   const response = await fetch(url, {
+    headers:{
+      'Content-Type': 'application/json'
+    },
     next: {
-      // revalidate: 30, //seconds
-      tags: [CACHE_TAG_REVIEWS]
+      revalidate: 30,
     },
   });
   if (!response.ok) {
-    throw new Error(`CMS returned ${response.status} for ${url}`);
+    throw new Error(`Error fetching drivers data ${response.status} for ${url}`);
   }
   return response.json();
 }
@@ -90,10 +80,10 @@ function toReview(item) {
   const { attributes } = item;
   // console.log(`item: ${JSON.stringify(item, null, 2)}`)
   return {
-    slug: attributes.slug,
+    name: attributes.name,
     title: attributes.title,
     date: attributes.publishedAt.slice(0, "yyyy-mm-dd".length),
     subtitle: attributes.subtitle,
-    image: attributes?.image?.data?.attributes?.url ? (CMS_URL === "http://localhost:1337" ? CMS_URL + attributes.image.data.attributes.url : attributes.image.data.attributes.url) : null ,
+    image: attributes?.image?.data?.attributes?.url ? (NEXT_PUBLIC_NEXTAUTH_URL === "http://localhost:1337" ? NEXT_PUBLIC_NEXTAUTH_URL + attributes.image.data.attributes.url : attributes.image.data.attributes.url) : null ,
   };
 }

@@ -12,7 +12,8 @@ const createDriver = async (req, res) => {
         rank,
         TOs,
         availability,
-        avatar
+        avatar,
+        // relationship
     } = req.body;
 
     try {
@@ -24,6 +25,7 @@ const createDriver = async (req, res) => {
             next_of_kin_contact: Yup.string().length(8, 'Contact no must be 8 characters long').required(),
             rank: Yup.string().required(),
             availability: Yup.string().required(),
+            // relationship: Yup.string().required(),
         });
 
         await schema.validate(req.body);
@@ -34,7 +36,8 @@ const createDriver = async (req, res) => {
             next_of_kin_contact,
             rank,
             availability,
-            avatar
+            avatar,
+            // relationship
         };
 
         if (TOs && TOs.length) {
@@ -68,7 +71,8 @@ const amendDriver = async (req, res) => {
         next_of_kin_contact,
         rank,
         availability,
-        avatar
+        avatar,
+        relationship
     } = req.body;
 
     const { id, userId } = req.params
@@ -97,6 +101,7 @@ const amendDriver = async (req, res) => {
             next_of_kin_contact: Yup.string().length(8, 'Contact no must be 8 characters long'),
             rank: Yup.string(),
             availability: Yup.string(),
+            relationship: Yup.string().required(),
         });
 
         await schema.validate(req.body);
@@ -110,6 +115,7 @@ const amendDriver = async (req, res) => {
             rank: driverId.rank,
             availability: driverId.availability,
             avatar: driverId.avatar,
+            relationship: driverId.relationship
         };
 
         const editDriver = await prisma.TO.update({
@@ -121,7 +127,8 @@ const amendDriver = async (req, res) => {
                 next_of_kin_contact,
                 rank,
                 availability,
-                avatar
+                avatar,
+                relationship
             }
         })
 
@@ -134,6 +141,7 @@ const amendDriver = async (req, res) => {
             rank: editDriver.rank,
             availability: editDriver.availability,
             avatar: editDriver.avatar,
+            relationship: editDriver.relationship
         };
 
         //Identify which fields have been changed

@@ -17,6 +17,7 @@ model TO {
   contact             String          @unique
   next_of_kin_name    String          @unique
   next_of_kin_contact String          @unique
+  relationship        String
   rank                String
   vehicles            Vehicle[]
   book_out            BookOutTiming[]
