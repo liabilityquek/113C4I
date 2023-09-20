@@ -56,79 +56,88 @@ export default function DashBoardFigures() {
   ])
 
   useEffect(() => {
-    const fetchIndividualData = async (iterableArr, dataFunction) => {
-      for (const [index, item] of iterableArr.entries()) {
-        try {
-          const response = await fetch(item.url)
-          // const response = await fetch(`${NEXT_PUBLIC_NEXTAUTH_URL}/api/get-${url}-${item.name.toLowerCase().replace('-', '')}-count`)
-          const data = await response.json()
-          dataFunction(prev => {
-            const newArr = [...prev]
-            newArr[index].value = data
-            return newArr
+    const fetchIndividualData = (iterableArr, dataFunction) => {
+      const promises = iterableArr.map((item, index) =>
+        fetch(item.url)
+          .then(response => response.json())
+          .then(data => {
+            dataFunction(prevState => {
+              const newArr = [...prevState];
+              newArr[index].value = data;
+              return newArr;
+            });
           })
-        } catch (err) {
-          console.log(`Error fetching driver data: ${err}`)
-        }
-      }
-    }
+          .catch(err => console.log(`Error fetching data at index ${index}:`, err))
+      );
+
+      return Promise.all(promises);
+    };
     const fetchData = async () => {
       setLoading(true)
-      await fetchIndividualData(driver, setDriver)
-      await fetchIndividualData(vehicle, setVehicle)
-      await fetchIndividualData(vehicleTypeDriverCount, setVehicleTypeDriverCount)
-      const newData = [];
-      for (let item of data) {
-        try {
-          const response = await fetch(item.url)
-          const statData = await response.text();
-          newData.push({ ...item, stat: statData })
-        }
-        catch (e) {
-          console.error('Error fetching data: ', e)
-        }
-      }
-      setData(newData)
-      setLoading(false)
-    }
+      try {
+        await Promise.all([
+          fetchIndividualData(driver, setDriver),
+          fetchIndividualData(vehicle, setVehicle),
+          fetchIndividualData(vehicleTypeDriverCount, setVehicleTypeDriverCount),
+          
+        ]);
+        const newDataPromises = data.map(async (item) => {
+          try {
+            const response = await fetch(item.url);
+            const statData = await response.text();
+            return { ...item, stat: statData };
+          } catch (e) {
+            console.error('Error fetching data:', e);
+            return item;
+          }
+        });
 
-    fetchData()
-  }, [])
+        const newData = await Promise.all(newDataPromises);
+        setData(newData);
+      } catch (e) {
+        console.error('Error fetching data:', e);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <>
-      
-        <main className="p-4 md:p-10 mx-auto max-w-7xl">
-          <Grid numItemsSm={2} numItemsLg={3} className="gap-6">
-            {data.map((item) => (
-              <Card key={item.category}>
-                <Title>{item.category}</Title>
-                <Flex
-                  justifyContent="start"
-                  alignItems="baseline"
-                  className="space-x-2"
-                >
-                  {loading ? 'Loading...' : <Metric>{item.stat}</Metric>}
-                  <Text>Total Count</Text>
-                </Flex>
-                <Flex className="mt-6">
-                  <Text>Field</Text>
-                  <Text className="text-right">Count</Text>
-                </Flex>
-                {loading ? 'Loading...' :
-                  <BarList
-                    data={item.data}
-                    valueFormatter={(number) =>
-                      Intl.NumberFormat('us').format(number).toString()
-                    }
-                    className="mt-2"
-                  />
-                }
-              </Card>
-            ))}
-          </Grid>
-        </main>
-      
+
+      <main className="p-4 md:p-10 mx-auto max-w-7xl">
+        <Grid numItemsSm={2} numItemsLg={3} className="gap-6">
+          {data.map((item) => (
+            <Card key={item.category}>
+              <Title>{item.category}</Title>
+              <Flex
+                justifyContent="start"
+                alignItems="baseline"
+                className="space-x-2"
+              >
+                {loading ? 'Loading...' : <Metric>{item.stat}</Metric>}
+                <Text>Total Count</Text>
+              </Flex>
+              <Flex className="mt-6">
+                <Text>Field</Text>
+                <Text className="text-right">Count</Text>
+              </Flex>
+              {loading ? 'Loading...' :
+                <BarList
+                  data={item.data}
+                  valueFormatter={(number) =>
+                    Intl.NumberFormat('us').format(number).toString()
+                  }
+                  className="mt-2"
+                />
+              }
+            </Card>
+          ))}
+        </Grid>
+      </main>
+
     </>
   );
 }

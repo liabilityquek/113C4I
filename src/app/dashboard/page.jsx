@@ -9,8 +9,6 @@ export const metadata = {
   title: "Dashboard"
 }
 
-const NEXTAUTH_URL = process.env.NEXTAUTH_URL
-
 export default async function Dashboard() {
   const session = await getServerSession(authOptions);
   console.log(`session in dashboard: ${JSON.stringify(session, null, 2)}`)
@@ -19,7 +17,7 @@ export default async function Dashboard() {
   } 
 
   const userName = session?.user?.name;
-  const userEmail = session?.user?.email;
+  // const userEmail = session?.user?.email;
   const isAdmin = await checkAdmin(userName)
 
   const maskData = (password) => {
@@ -35,9 +33,6 @@ export default async function Dashboard() {
       {isAdmin ? (
         <>
           <h1>Rendering Manual login</h1>
-          <div className="mt-8">
-            {userName ? <p className="mb-3">Welcome: {userName}</p> : null}
-          </div>
         </>
       ) : (
         <>
