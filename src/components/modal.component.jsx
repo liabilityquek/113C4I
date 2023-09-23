@@ -107,7 +107,6 @@ export const AmendModal = ({
 
   const handleChange = (e) => {
     const value = e.target.value.toUpperCase()
-    console.log(driverState.name);
     console.log('Changing:', e.target.name, value);
     setDriverState({
       ...driverState,
@@ -187,7 +186,6 @@ export const AmendModal = ({
                         required
                         type="text"
                         name="name"
-                        id="name"
                         onChange={handleChange}
                         className="w-full py-2 px-4 rounded-md"
                         value={driverState.name}
