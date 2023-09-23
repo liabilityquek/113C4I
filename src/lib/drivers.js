@@ -61,13 +61,10 @@ async function fetchDrivers(parameters) {
       encodeValuesOnly: true,
     });
 
-  //   console.log("fetchDrivers:", url);
+    console.log("fetchDrivers:", url);
   const response = await fetch(url, {
     headers:{
       'Content-Type': 'application/json'
-    },
-    next: {
-      revalidate: 30,
     },
   });
   if (!response.ok) {
