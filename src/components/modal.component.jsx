@@ -76,13 +76,13 @@ export const AmendModal = ({
   serverError,
 }) => {
   const [driverState, setDriverState] = useState({
-    rank: '',
-    name: '',
-    contact: '',
-    kin: '',
-    kinContact: '',
-    relationship: '',
-    availability: '',
+    rank: "",
+    name: "",
+    contact: "",
+    kin: "",
+    kinContact: "",
+    relationship: "",
+    availability: "",
   });
 
   useEffect(() => {
@@ -107,14 +107,13 @@ export const AmendModal = ({
 
   const handleChange = (e) => {
     const value = e.target.value.toUpperCase()
-    console.log('Changing:', e.target.name, value);
     setDriverState({
       ...driverState,
       [e.target.name]: value,
     });
   };
 
-  const disable = 
+  const disable =
     !driverState.rank ||
     !driverState.contact ||
     !driverState.kin ||
@@ -122,7 +121,7 @@ export const AmendModal = ({
     !driverState.availability;
 
   return (
-    <>
+    <>              
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={close}>
           <Transition.Child
@@ -162,82 +161,61 @@ export const AmendModal = ({
                   </Dialog.Title>
 
                   <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
-                      <label
-                        htmlFor="rank"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Rank
-                      </label>
-
+                  <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
+                      <label>                   
+                        Rank: 
                       <input
                         required
-                        type="text"
+                        type="driverState.rank"
                         name="rank"
                         onChange={handleChange}
                         className="w-full py-2 px-4 rounded-md"
                         value={driverState.rank}
                         style={{ textTransform: "uppercase" }}
-                        {...register("rank", { required: "Rank is required" })}
-                       />
+                      />
+                      </label>
                     </div>
                     <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
                       <input
                         required
-                        type="text"
+                        type="driverState.name"
                         name="name"
                         onChange={handleChange}
                         className="w-full py-2 px-4 rounded-md"
                         value={driverState.name}
                         style={{ textTransform: "uppercase" }}
-                        {...register("name", { required: "Name is required" })}
                       />
                     </div>
                     <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
                       <input
                         required
-                        type="text"
+                        type="driverState.contact"
                         name="contact"
                         onChange={handleChange}
                         className="w-full py-2 px-4 rounded-md"
                         value={driverState.contact}
-                        {...register("contact", {
-                          required: "Contact is required",
-                          pattern: {
-                            length: /^[0-9]{8}$/,
-                            message: "Contact no must be 8 characters long",
-                          },
-                        })}
                       />
                     </div>
                     <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
                       <input
                         required
-                        type="text"
+                        type="driverState.kin"
                         name="kin"
                         onChange={handleChange}
                         className="w-full py-2 px-4 rounded-md"
                         value={driverState.kin}
                         style={{ textTransform: "uppercase" }}
-                        {...register("kin", { required: "Next Of Kin Name is required" })}
                       />
                     </div>
                     <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
                       <input
                         required
-                        type="text"
+                        type="driverState.kinContact"
                         name="kinContact"
                         onChange={handleChange}
                         className="w-full py-2 px-4 rounded-md"
                         value={driverState.kinContact}
                         style={{ textTransform: "uppercase" }}
-                        {...register("contact", {
-                          required: "Contact is required",
-                          pattern: {
-                            length: /^[0-9]{8}$/,
-                            message: "Next Of Kin Contact no must be 8 characters long",
-                          },
-                        })}
                       />
                     </div>
                     <div className="mb-4 w-full border-2 border-gray-600 rounded-md relative"></div>

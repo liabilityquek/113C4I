@@ -38,7 +38,7 @@ export default function Header() {
     const navigation = [
         { name: 'Dashboard', href: '/dashboard' },
         { name: 'Drivers', href: '/drivers' },
-        // { name: 'Book Out Request', href: '/book-out-request' }
+        { name: 'Vehicles', href: '/vehicles' }
     ];
 
     console.log(`navbar: ${user?.name}`)

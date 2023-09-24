@@ -14,7 +14,7 @@ export const metadata = {
 
 export const revalidate = 30; //page will revalidate within 30s
 
-export default async function Dashboard() {
+export default async function Drivers() {
     const session = await getServerSession(authOptions);
     if (!session) {
         redirect("/");
