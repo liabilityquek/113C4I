@@ -121,42 +121,6 @@ export const AmendButton = ({ driver, driverId, userId }) => {
     setIsOpen(true);
   }
 
-  const onSubmit = async (data) => {
-    try {
-      setLoading(true);
-      const response = await fetch(
-        `${NEXT_PUBLIC_BASEURL}/api/server/amend-driver/${userId}/${driverId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
-      if (response.ok) {// If the response status is successful (2xx)
-        console.log('Update driver profile successfull');
-        setLoading(false)
-        return;
-      }
-
-      if (response.status === 400) {
-        const errorText = await response.text();
-        setLoading(false);
-        setServerError(errorText);
-        return;
-      } else {
-        const errorData = await response.json();
-        setServerError(errorData);
-      }
-    } catch (e) {
-      console.error(`Error amending driver id: ${driverId} - ${e}`);
-      setServerError('An error occurred while processing your request.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <>
       {loading ? (
@@ -176,11 +140,15 @@ export const AmendButton = ({ driver, driverId, userId }) => {
 
       <AmendModal
         driver={driver}
+        driverId={driverId}
         isOpen={isOpen}
         open={openModal}
         close={closeModal}
-        onSubmit={onSubmit}
         serverError={serverError}
+        loading={loading}
+        setLoading={setLoading}
+        userId={userId}
+        setServerError={setServerError}
       />
     </>
   );

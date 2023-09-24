@@ -3,6 +3,7 @@
 import { Dialog, Transition, Listbox } from "@headlessui/react";
 import { Fragment, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import AmendDriverDetailsForm from '@/app/drivers/form'
 
 export const DeleteModal = ({ driver, close, isOpen, onDelete }) => {
   return (
@@ -72,53 +73,12 @@ export const AmendModal = ({
   driver,
   close,
   isOpen,
-  onSubmit,
   serverError,
+  setLoading,
+  driverId,
+  userId,
+  setServerError
 }) => {
-  const [driverState, setDriverState] = useState({
-    rank: "",
-    name: "",
-    contact: "",
-    kin: "",
-    kinContact: "",
-    relationship: "",
-    availability: "",
-  });
-
-  useEffect(() => {
-    if (driver) {
-      setDriverState({
-        rank: driver.rank,
-        name: driver.name,
-        contact: driver.contact,
-        kin: driver.next_of_kin_name,
-        kinContact: driver.next_of_kin_contact,
-        relationship: driver.relationship,
-        availability: driver.availability,
-      });
-    }
-  }, [driver]);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-
-  const handleChange = (e) => {
-    const value = e.target.value.toUpperCase()
-    setDriverState({
-      ...driverState,
-      [e.target.name]: value,
-    });
-  };
-
-  const disable =
-    !driverState.rank ||
-    !driverState.contact ||
-    !driverState.kin ||
-    !driverState.kinContact ||
-    !driverState.availability;
 
   return (
     <>              
@@ -148,10 +108,7 @@ export const AmendModal = ({
                 leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
-                  // as="h3"
-                  // className="text-lg font-medium leading-6 text-gray-900"
-                  >
+                  <Dialog.Title>
                     {serverError ? (
                       <p className="bg-red-100 text-base text-red-600 w-full py-2 px-4 rounded-md mb-6 mt-2">
                         {" "}
@@ -159,78 +116,7 @@ export const AmendModal = ({
                       </p>
                     ) : null}
                   </Dialog.Title>
-
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                  <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
-                      <label>                   
-                        Rank: 
-                      <input
-                        required
-                        type="driverState.rank"
-                        name="rank"
-                        onChange={handleChange}
-                        className="w-full py-2 px-4 rounded-md"
-                        value={driverState.rank}
-                        style={{ textTransform: "uppercase" }}
-                      />
-                      </label>
-                    </div>
-                    <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
-                      <input
-                        required
-                        type="driverState.name"
-                        name="name"
-                        onChange={handleChange}
-                        className="w-full py-2 px-4 rounded-md"
-                        value={driverState.name}
-                        style={{ textTransform: "uppercase" }}
-                      />
-                    </div>
-                    <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
-                      <input
-                        required
-                        type="driverState.contact"
-                        name="contact"
-                        onChange={handleChange}
-                        className="w-full py-2 px-4 rounded-md"
-                        value={driverState.contact}
-                      />
-                    </div>
-                    <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
-                      <input
-                        required
-                        type="driverState.kin"
-                        name="kin"
-                        onChange={handleChange}
-                        className="w-full py-2 px-4 rounded-md"
-                        value={driverState.kin}
-                        style={{ textTransform: "uppercase" }}
-                      />
-                    </div>
-                    <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
-                      <input
-                        required
-                        type="driverState.kinContact"
-                        name="kinContact"
-                        onChange={handleChange}
-                        className="w-full py-2 px-4 rounded-md"
-                        value={driverState.kinContact}
-                        style={{ textTransform: "uppercase" }}
-                      />
-                    </div>
-                    <div className="mb-4 w-full border-2 border-gray-600 rounded-md relative"></div>
-
-                    <div className="mt-4 flex justify-center">
-                      <button
-                        type="submit"
-                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                        disabled={disable}
-                        onClick={close}
-                      >
-                        Save Changes
-                      </button>
-                    </div>
-                  </form>
+                  <AmendDriverDetailsForm driver={driver} close={close} setLoading={setLoading} driverId={driverId} userId={userId} setServerError={setServerError}/>
                 </Dialog.Panel>
               </Transition.Child>
             </div>

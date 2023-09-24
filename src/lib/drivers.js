@@ -20,7 +20,6 @@ export async function getDriver(name) {
   const item = data[0];
   return {
     ...toReview(item),
-    // body: marked(item.attributes.body, { headerIds: false, mangle: false }),
   };
 }
 

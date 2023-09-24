@@ -40,7 +40,7 @@ const ResetPasswordForm = () => {
             if (response.ok) {
                 router.push('/admin')
             } else {
-                const errorData = await response.json();
+                const errorData = await response.text();
                 setServerError(errorData);
             }
         } catch (error) {
