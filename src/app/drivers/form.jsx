@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect,  } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+import { useForm, Controller } from "react-hook-form";
 
 const NEXT_PUBLIC_BASEURL = process.env.NEXT_PUBLIC_BASEURL;
 
@@ -13,8 +13,10 @@ const AmendDriverDetailsForm = ({
   userId,
   setServerError,
 }) => {
-  const { handleSubmit, register, setValue, watch, formState: { errors } } = useForm();
+  const { handleSubmit, register, setValue, watch, control, formState: { errors } } = useForm();
   
+  const availabilityOptions = ['PRESENT', 'DEFERRED']
+
   useEffect(() => {
     if (driver) {
       setValue('rank', driver.rank);
@@ -24,6 +26,7 @@ const AmendDriverDetailsForm = ({
       setValue('kinContact', driver.next_of_kin_contact);
       setValue('relationship', driver.relationship);
       setValue('availability', driver.availability);
+      // setValue('relationship', driver.relationship);
     }
   }, [driver, setValue]);
 
@@ -32,21 +35,23 @@ const AmendDriverDetailsForm = ({
   const watchedContact = watch('contact');
   const watchedKin = watch('kin');
   const watchedKinContact = watch('kinContact');
-  const disable = !watchedKin || !watchedName || !watchedRank || !watchedContact || watchedContact.length < 8 || !watchedKinContact || watchedKinContact.length < 8;
+  const watchedAvailability = watch('availability');
+  // const watchedRelationship = watch('relationship');
+  const disable = !watchedAvailability || !watchedKin || !watchedName || !watchedRank || !watchedContact || watchedContact.length !== 8 || !watchedKinContact || watchedKinContact.length !== 8;
 
   const handleNumericInput = (e) => {
     e.target.value = e.target.value.replace(/[^0-9]/g, "");
 };
 
-  //Debugging States
-  // useEffect(() => {
-  //   console.log('setValue', setValue);
-  //   console.log('disable', disable); 
-  //   console.log('form errors:', errors); 
-  // }, [setValue, disable, errors]);
+ // Debugging States
+  useEffect(() => {
+    console.log('setValue', setValue);
+    console.log('disable', disable); 
+    console.log('form errors:', errors); 
+  }, [setValue, disable, errors]);
 
   const onSubmit = async (data) => {
-    // console.log(`data: ${JSON.stringify(data, null, 2)}`);
+    console.log(`data: ${JSON.stringify(data, null, 2)}`);
     try {
       setLoading(true);
       const response = await fetch(
@@ -87,18 +92,21 @@ const AmendDriverDetailsForm = ({
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
+          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-rank">
+            Rank
+            </label>
         <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
-          <label>
-            Rank:
             <input
               {...register("rank", { required: true })}
               type="text"
               className="w-full py-2 px-4 rounded-md"
               style={{ textTransform: "uppercase" }}
             />
-            {errors.rank && <span>Rank is required</span>}
-          </label>
+            {errors.rank && <p className="text-red-500 text-xs italic">Rank is required</p>}
         </div>
+        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-name">
+          Name
+          </label>
         <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
           <input
             {...register("name", { required: true })}
@@ -106,18 +114,24 @@ const AmendDriverDetailsForm = ({
             className="w-full py-2 px-4 rounded-md"
             style={{ textTransform: "uppercase" }}
           />
-          {errors.name && <span>Name is required</span>}
+          {errors.name && <p className="text-red-500 text-xs italic">Name is required</p>}
         </div>
+        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-contact">
+          Contact
+          </label>
         <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
             <input
-              {...register("contact", { required: true, maxLength: 8, pattern: "^[0-9]{8}$" })}
+              {...register("contact", { required: true, maxLength: 8, pattern: /^[0-9]{8}$/ })}
               type="text"
               onInput={handleNumericInput}
               className="w-full py-2 px-4 rounded-md"
               style={{ textTransform: "uppercase" }}
             />
-            {errors.contact && <span>Contact No must be 8 numeric digits</span>}
+            {errors.contact && <p className="text-red-500 text-xs italic">Contact No must be 8 numeric digits</p>}
           </div>
+        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-kin">
+          Next of Kin
+          </label>
         <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
           <input
             {...register("kin", { required: true })}
@@ -125,19 +139,37 @@ const AmendDriverDetailsForm = ({
             className="w-full py-2 px-4 rounded-md"
             style={{ textTransform: "uppercase" }}
           />
-          {errors.kin && <span>Next of kin is required</span>}
+          {errors.kin && <p className="text-red-500 text-xs italic">Next of kin is required</p>}
         </div>
+        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-kinContact">
+          Next of Kin Contact
+          </label>
         <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
           <input
-            {...register("kinContact", { required: true, maxLength: 8, pattern: "^[0-9]{8}$" })}
+            {...register("kinContact", { required: true, maxLength: 8, pattern: /^[0-9]{8}$/ })}
             type="text"
             onInput={handleNumericInput}
             className="w-full py-2 px-4 rounded-md"
             style={{ textTransform: "uppercase" }}
           />
-          {errors.kinContact && <span>Next of Kin contact no must be 8 numeric digits</span>}
+          {errors.kinContact && <p className="text-red-500 text-xs italic">Next of Kin contact no must be 8 numeric digits</p>}
           </div>
-        <div className="mb-4 w-full border-2 border-gray-600 rounded-md relative"></div>
+        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-availability">
+          Availability
+          </label>
+          <Controller
+        name="availability" // Name of the field, you will access the value using this name in the submit handler.
+        control={control}
+        defaultValue="" // Set a default value if you wish
+        render={({ field }) => (
+          <select className="mb-5 py-2 px-4 w-full border-2 border-gray-600 rounded-md" {...field}>
+            <option value="" disabled>Select an option</option>
+            {availabilityOptions.map((op, index) => (
+          <option key={index} value={op}>{op}</option>
+        ))}
+          </select>
+        )}
+      />
 
         <div className="mt-4 flex justify-center">
           <button
