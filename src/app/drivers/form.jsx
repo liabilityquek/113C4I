@@ -27,7 +27,7 @@ const AmendDriverDetailsForm = ({
       setValue('relationship', driver.relationship);
       setValue('availability', driver.availability);
       setValue('avatar', driver.avatar)
-      setValue('relationship', driver.relationship);
+      // setValue('relationship', driver.relationship);
     }
   }, [driver, setValue]);
 
@@ -37,25 +37,29 @@ const AmendDriverDetailsForm = ({
   const watchedKin = watch('kin');
   const watchedKinContact = watch('kinContact');
   const watchedAvailability = watch('availability');
-  const watchedRelationship = watch('relationship');
-  const disable = !watchedRelationship || !watchedAvailability || !watchedKin || !watchedName || !watchedRank || !watchedContact || watchedContact.length !== 8 || !watchedKinContact || watchedKinContact.length !== 8;
+  // const watchedRelationship = watch('relationship');
+  const disable = !watchedAvailability || !watchedKin || !watchedName || !watchedRank || !watchedContact || watchedContact.length !== 8 || !watchedKinContact || watchedKinContact.length !== 8;
 
   const handleNumericInput = (e) => {
     e.target.value = e.target.value.replace(/[^0-9]/g, "");
 };
 
-const uploadAvatarImage = (e) => {
-  const file = e.target.files[0]
-  const avatarImage = URL.createObjectURL(file)
-  console.log(`avatarImage: ${avatarImage}`)
-}
   const onSubmit = async (data) => {
     console.log(`data: ${JSON.stringify(data, null, 2)}`);
     const formData = new FormData();
+    const avatarFile = document.querySelector('input[type="file"]').files[0];
 
-    if (data.avatar) {
-    formData.append('avatar', data.avatar);
+    if (avatarFile) {
+    formData.append('avatar', avatarFile);
   }
+  
+    formData.append('name', data.name);
+    formData.append('contact', data.contact);
+    formData.append('rank', data.rank);
+    formData.append('kin', data.kin);
+    formData.append('availability', data.availability);
+    formData.append('kinContact', data.kinContact);
+    formData.append('relationship', data.relationship);
 
     try {
       setLoading(true);
@@ -63,10 +67,7 @@ const uploadAvatarImage = (e) => {
         `${NEXT_PUBLIC_BASEURL}/api/server/amend-driver/${userId}/${driverId}`,
         {
           method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
+          body: formData,
         }
       );
       if (response.ok) {
@@ -146,18 +147,6 @@ const uploadAvatarImage = (e) => {
           />
           {errors.kin && <p className="text-red-500 text-xs italic">Next of kin is required</p>}
         </div>
-        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-kin">
-          Next of Kin Relationship
-          </label>
-        <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
-          <input
-            {...register("relationship", { required: true })}
-            type="text"
-            className="w-full py-2 px-4 rounded-md"
-            style={{ textTransform: "uppercase" }}
-          />
-          {errors.relationship && <p className="text-red-500 text-xs italic">Next of Kin relationship is required</p>}
-        </div>
         <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-kinContact">
           Next of Kin Contact
           </label>
@@ -177,6 +166,7 @@ const uploadAvatarImage = (e) => {
           <Controller
         name="availability" // Name of the field, you will access the value using this name in the submit handler.
         control={control}
+        defaultValue="" // Set a default value if you wish
         render={({ field }) => (
           <select className="mb-5 py-2 px-4 w-full border-2 border-gray-600 rounded-md" {...field}>
             <option value="" disabled>Select an option</option>
@@ -190,11 +180,30 @@ const uploadAvatarImage = (e) => {
           Upload Avatar
           </label>
           <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
+<Controller
+  name="avatar"
+  control={control}
+  render={({ field }) => (
     <input
       type="file"
       className="w-full py-2 px-4 rounded-md"
-      onChange={uploadAvatarImage}
+      defaultValue={''}
+      style={{ textTransform: "uppercase" }}
+      onChange={(e) => {
+        const file = e.target.files[0];
+        if (e.target.files.length > 0) {
+          field.onChange(e.target.files[0])
+          console.log('File selected:');
+          console.log('Name:', file.name);
+          console.log('Size:', file.size);
+          console.log('Type:', file.type);
+          console.log('length:', file.length)
+          console.log("Form State after File Selection: ", watch());
+        }
+      }}
     />
+  )}
+/>
 </div>
 
         <div className="mt-4 flex py-2 px-1 justify-center text-center">

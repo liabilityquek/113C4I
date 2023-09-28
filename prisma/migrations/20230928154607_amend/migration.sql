@@ -38,7 +38,7 @@ CREATE TABLE "TO" (
     "relationship" TEXT NOT NULL,
     "rank" TEXT NOT NULL,
     "availability" "Availability" NOT NULL,
-    "avatar" TEXT NOT NULL,
+    "avatar" BYTEA[],
 
     CONSTRAINT "TO_pkey" PRIMARY KEY ("id")
 );
