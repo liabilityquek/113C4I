@@ -10,6 +10,9 @@ export async function GET(request) {
             },
             orderBy: {
                 name: 'asc'
+            },
+            orderBy: {
+                availability: 'desc'
             }
         });
 

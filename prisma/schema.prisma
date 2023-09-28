@@ -25,7 +25,7 @@ model TO {
   updateToHistory     UpdateHistory[] @relation("TOUpdateHistoryToRelation")
   notification        Notification[]
   availability        Availability
-  avatar              Bytes[]
+  avatar              String
 }
 
 model UpdateHistory {

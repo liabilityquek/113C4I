@@ -35,9 +35,10 @@ CREATE TABLE "TO" (
     "contact" TEXT NOT NULL,
     "next_of_kin_name" TEXT NOT NULL,
     "next_of_kin_contact" TEXT NOT NULL,
+    "relationship" TEXT NOT NULL,
     "rank" TEXT NOT NULL,
     "availability" "Availability" NOT NULL,
-    "avatar" BYTEA[],
+    "avatar" TEXT NOT NULL,
 
     CONSTRAINT "TO_pkey" PRIMARY KEY ("id")
 );
@@ -46,13 +47,12 @@ CREATE TABLE "TO" (
 CREATE TABLE "UpdateHistory" (
     "id" SERIAL NOT NULL,
     "toId" INTEGER NOT NULL,
-    "updatedByTo" INTEGER,
-    "updatedByUser" INTEGER,
+    "updatedByToId" INTEGER,
+    "updatedByUserId" INTEGER,
     "fields" JSONB NOT NULL,
     "beforeValues" JSONB NOT NULL,
     "afterValues" JSONB NOT NULL,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "userId" INTEGER,
 
     CONSTRAINT "UpdateHistory_pkey" PRIMARY KEY ("id")
 );
@@ -119,10 +119,13 @@ CREATE UNIQUE INDEX "User_name_key" ON "User"("name");
 ALTER TABLE "Vehicle" ADD CONSTRAINT "Vehicle_toId_fkey" FOREIGN KEY ("toId") REFERENCES "TO"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "UpdateHistory" ADD CONSTRAINT "UpdateHistory_toId_fkey" FOREIGN KEY ("toId") REFERENCES "TO"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "UpdateHistory" ADD CONSTRAINT "UpdateHistory_updatedByToId_fkey" FOREIGN KEY ("updatedByToId") REFERENCES "TO"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "UpdateHistory" ADD CONSTRAINT "UpdateHistory_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "UpdateHistory" ADD CONSTRAINT "UpdateHistory_updatedByUserId_fkey" FOREIGN KEY ("updatedByUserId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UpdateHistory" ADD CONSTRAINT "UpdateHistory_toId_fkey" FOREIGN KEY ("toId") REFERENCES "TO"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "BookOutTiming" ADD CONSTRAINT "BookOutTiming_toId_fkey" FOREIGN KEY ("toId") REFERENCES "TO"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -26,7 +26,8 @@ const AmendDriverDetailsForm = ({
       setValue('kinContact', driver.next_of_kin_contact);
       setValue('relationship', driver.relationship);
       setValue('availability', driver.availability);
-      // setValue('relationship', driver.relationship);
+      setValue('avatar', driver.avatar)
+      setValue('relationship', driver.relationship);
     }
   }, [driver, setValue]);
 
@@ -36,22 +37,26 @@ const AmendDriverDetailsForm = ({
   const watchedKin = watch('kin');
   const watchedKinContact = watch('kinContact');
   const watchedAvailability = watch('availability');
-  // const watchedRelationship = watch('relationship');
-  const disable = !watchedAvailability || !watchedKin || !watchedName || !watchedRank || !watchedContact || watchedContact.length !== 8 || !watchedKinContact || watchedKinContact.length !== 8;
+  const watchedRelationship = watch('relationship');
+  const disable = !watchedRelationship || !watchedAvailability || !watchedKin || !watchedName || !watchedRank || !watchedContact || watchedContact.length !== 8 || !watchedKinContact || watchedKinContact.length !== 8;
 
   const handleNumericInput = (e) => {
     e.target.value = e.target.value.replace(/[^0-9]/g, "");
 };
 
- // Debugging States
-  useEffect(() => {
-    console.log('setValue', setValue);
-    console.log('disable', disable); 
-    console.log('form errors:', errors); 
-  }, [setValue, disable, errors]);
-
+const uploadAvatarImage = (e) => {
+  const file = e.target.files[0]
+  const avatarImage = URL.createObjectURL(file)
+  console.log(`avatarImage: ${avatarImage}`)
+}
   const onSubmit = async (data) => {
     console.log(`data: ${JSON.stringify(data, null, 2)}`);
+    const formData = new FormData();
+
+    if (data.avatar) {
+    formData.append('avatar', data.avatar);
+  }
+
     try {
       setLoading(true);
       const response = await fetch(
@@ -141,6 +146,18 @@ const AmendDriverDetailsForm = ({
           />
           {errors.kin && <p className="text-red-500 text-xs italic">Next of kin is required</p>}
         </div>
+        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-kin">
+          Next of Kin Relationship
+          </label>
+        <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
+          <input
+            {...register("relationship", { required: true })}
+            type="text"
+            className="w-full py-2 px-4 rounded-md"
+            style={{ textTransform: "uppercase" }}
+          />
+          {errors.relationship && <p className="text-red-500 text-xs italic">Next of Kin relationship is required</p>}
+        </div>
         <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-kinContact">
           Next of Kin Contact
           </label>
@@ -160,7 +177,6 @@ const AmendDriverDetailsForm = ({
           <Controller
         name="availability" // Name of the field, you will access the value using this name in the submit handler.
         control={control}
-        defaultValue="" // Set a default value if you wish
         render={({ field }) => (
           <select className="mb-5 py-2 px-4 w-full border-2 border-gray-600 rounded-md" {...field}>
             <option value="" disabled>Select an option</option>
@@ -170,12 +186,22 @@ const AmendDriverDetailsForm = ({
           </select>
         )}
       />
+      <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-avatar">
+          Upload Avatar
+          </label>
+          <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
+    <input
+      type="file"
+      className="w-full py-2 px-4 rounded-md"
+      onChange={uploadAvatarImage}
+    />
+</div>
 
-        <div className="mt-4 flex justify-center">
+        <div className="mt-4 flex py-2 px-1 justify-center text-center">
           <button
             type="submit"
             disabled={disable}
-            className={`cursor pointer inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+            className={`min-w-16 md:w-32 lg:w-48 cursor-pointer inline-flex rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2  ${
               disable
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                 : "bg-blue-100 text-blue-900 hover:bg-blue-200"
@@ -186,6 +212,14 @@ const AmendDriverDetailsForm = ({
           </button>
         </div>
       </form>
+      <div className="mt-4 flex py-2 px-1 justify-center text-center">
+      <button
+            className='min-w-16 md:w-32 lg:w-48 cursor-pointer inline-flex rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-blue-100 text-blue-900 hover:bg-blue-200'
+            onClick={close}
+          >
+            Cancel
+          </button>
+          </div>
     </>
   );
 };
