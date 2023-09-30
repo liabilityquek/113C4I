@@ -101,7 +101,7 @@ const amendDriver = async (req, res) => {
             next_of_kin_contact: Yup.string().length(8, 'Contact no must be 8 characters long'),
             rank: Yup.string(),
             availability: Yup.string(),
-            relationship: Yup.string().required(),
+            relationship: Yup.string(),
         });
 
         await schema.validate(req.body);

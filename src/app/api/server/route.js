@@ -3,6 +3,7 @@ const app = express();
 const port = 4000;
 const path = require("path");
 const cors = require('cors');
+const multer = require('multer');
 const { createUser, resetPassword } = require('../../../lib/userController');
 const { createDriver, amendDriver, deleteDriver } = require('../../../lib/driverController');
 const { createVehicle, amendVehicle, tagVehicle, deleteVehicle } = require('../../../lib/vehicleController');

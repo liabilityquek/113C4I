@@ -20,6 +20,7 @@ const AmendDriverDetailsForm = ({
   useEffect(() => {
     if (driver) {
       setValue('rank', driver.rank);
+      console.log(`avatar data: ${driver.avatar}`)
       setValue('name', driver.name);
       setValue('contact', driver.contact);
       setValue('kin', driver.next_of_kin_name);
@@ -27,7 +28,7 @@ const AmendDriverDetailsForm = ({
       setValue('relationship', driver.relationship);
       setValue('availability', driver.availability);
       setValue('avatar', driver.avatar)
-      // setValue('relationship', driver.relationship);
+      setValue('relationship', driver.relationship);
     }
   }, [driver, setValue]);
 
@@ -37,29 +38,28 @@ const AmendDriverDetailsForm = ({
   const watchedKin = watch('kin');
   const watchedKinContact = watch('kinContact');
   const watchedAvailability = watch('availability');
-  // const watchedRelationship = watch('relationship');
-  const disable = !watchedAvailability || !watchedKin || !watchedName || !watchedRank || !watchedContact || watchedContact.length !== 8 || !watchedKinContact || watchedKinContact.length !== 8;
+  const watchedRelationship = watch('relationship');
+  const disable = !watchedRelationship || !watchedAvailability || !watchedKin || !watchedName || !watchedRank || !watchedContact || watchedContact.length !== 8 || !watchedKinContact || watchedKinContact.length !== 8;
 
   const handleNumericInput = (e) => {
     e.target.value = e.target.value.replace(/[^0-9]/g, "");
 };
 
   const onSubmit = async (data) => {
-    console.log(`data: ${JSON.stringify(data, null, 2)}`);
+    // console.log(`data: ${JSON.stringify(data, null, 2)}`);
     const formData = new FormData();
-    const avatarFile = document.querySelector('input[type="file"]').files[0];
+    formData.append('files', data.avatar)
+    data = { ...data, avatar: data.avatar[0]?.name };
 
-    if (avatarFile) {
-    formData.append('avatar', avatarFile);
-  }
-  
-    formData.append('name', data.name);
-    formData.append('contact', data.contact);
-    formData.append('rank', data.rank);
-    formData.append('kin', data.kin);
-    formData.append('availability', data.availability);
-    formData.append('kinContact', data.kinContact);
-    formData.append('relationship', data.relationship);
+    Object.keys(data).forEach(key => {
+    if(data[key] !== undefined && data[key] !== null && key !== 'avatar') {
+      formData.append(key, data[key]);
+    }
+  });
+
+  for (var pair of formData.entries()) {
+    console.log(pair[0]+ ', ' + pair[1]);
+}
 
     try {
       setLoading(true);
@@ -74,17 +74,15 @@ const AmendDriverDetailsForm = ({
         // If the response status is successful (2xx)
         console.log("Update driver profile successfull");
         setLoading(false);
+        close();
         return;
       }
 
-      if (response.status === 400) {
+      if (!response.ok) {
         const errorText = await response.text();
         setLoading(false);
         setServerError(errorText);
         return;
-      } else {
-        const errorData = await response.text();
-        setServerError(errorData);
       }
     } catch (e) {
       console.error(`Error amending driver id: ${driverId} - ${e}`);
@@ -98,7 +96,7 @@ const AmendDriverDetailsForm = ({
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-rank">
+          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
             Rank
             </label>
         <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
@@ -110,7 +108,7 @@ const AmendDriverDetailsForm = ({
             />
             {errors.rank && <p className="text-red-500 text-xs italic">Rank is required</p>}
         </div>
-        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-name">
+        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
           Name
           </label>
         <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
@@ -122,7 +120,7 @@ const AmendDriverDetailsForm = ({
           />
           {errors.name && <p className="text-red-500 text-xs italic">Name is required</p>}
         </div>
-        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-contact">
+        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
           Contact
           </label>
         <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
@@ -135,7 +133,7 @@ const AmendDriverDetailsForm = ({
             />
             {errors.contact && <p className="text-red-500 text-xs italic">Contact No must be 8 numeric digits</p>}
           </div>
-        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-kin">
+        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
           Next of Kin
           </label>
         <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
@@ -147,7 +145,19 @@ const AmendDriverDetailsForm = ({
           />
           {errors.kin && <p className="text-red-500 text-xs italic">Next of kin is required</p>}
         </div>
-        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-kinContact">
+        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+          Relationship
+          </label>
+        <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
+          <input
+            {...register("relationship", { required: true })}
+            type="text"
+            className="w-full py-2 px-4 rounded-md"
+            style={{ textTransform: "uppercase" }}
+          />
+          {errors.kinContact && <p className="text-red-500 text-xs italic">Next of Kin contact no must be 8 numeric digits</p>}
+          </div>        
+        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
           Next of Kin Contact
           </label>
         <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
@@ -160,7 +170,7 @@ const AmendDriverDetailsForm = ({
           />
           {errors.kinContact && <p className="text-red-500 text-xs italic">Next of Kin contact no must be 8 numeric digits</p>}
           </div>
-        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-availability">
+        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
           Availability
           </label>
           <Controller
@@ -176,59 +186,55 @@ const AmendDriverDetailsForm = ({
           </select>
         )}
       />
-      <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-avatar">
+      <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
           Upload Avatar
           </label>
           <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
 <Controller
-  name="avatar"
+  name='avatar'
+  className="w-full py-2 px-4 rounded-md"
   control={control}
-  render={({ field }) => (
-    <input
-      type="file"
-      className="w-full py-2 px-4 rounded-md"
-      defaultValue={''}
-      style={{ textTransform: "uppercase" }}
-      onChange={(e) => {
-        const file = e.target.files[0];
-        if (e.target.files.length > 0) {
-          field.onChange(e.target.files[0])
-          console.log('File selected:');
-          console.log('Name:', file.name);
-          console.log('Size:', file.size);
-          console.log('Type:', file.type);
-          console.log('length:', file.length)
+  render={({ field: { value, onChange, ...field } }) => {
+    return (
+      <input
+        {...field}
+        value={value?.fileName}
+        onChange={(e) => {
+          onChange(e.target.files[0]);
           console.log("Form State after File Selection: ", watch());
-        }
-      }}
-    />
-  )}
+        }}
+        type="file"
+      />
+    );
+  }}
 />
+
 </div>
 
-        <div className="mt-4 flex py-2 px-1 justify-center text-center">
+        <div className="mt-4">
           <button
             type="submit"
             disabled={disable}
-            className={`min-w-16 md:w-32 lg:w-48 cursor-pointer inline-flex rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2  ${
+            className={`px-4 py-2 flex justify-center items-center w-full cursor-pointer rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2  ${
               disable
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                 : "bg-blue-100 text-blue-900 hover:bg-blue-200"
             }`}
-            onClick={!disable ? close : undefined}
+            // onClick={!disable ? close : undefined}
+            
           >
             Save Changes
           </button>
         </div>
-      </form>
-      <div className="mt-4 flex py-2 px-1 justify-center text-center">
+      <div className="mt-4">
       <button
-            className='min-w-16 md:w-32 lg:w-48 cursor-pointer inline-flex rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-blue-100 text-blue-900 hover:bg-blue-200'
+            className='px-4 py-2 flex justify-center items-center w-full cursor-pointer rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-blue-100 text-blue-900 hover:bg-blue-200'
             onClick={close}
           >
             Cancel
           </button>
           </div>
+      </form>
     </>
   );
 };
