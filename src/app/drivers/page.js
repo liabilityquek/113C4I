@@ -43,10 +43,10 @@ export default async function Drivers() {
                                                 className="space-x-2"
                                             >
                                                 <div className="font-semibold py-1 text-left">
-                                                    <h2>{driver?.rank} {driver?.name}</h2>
+                                                    <h2>{driver?.rank.toUpperCase()} {driver?.name.toUpperCase()}</h2>
                                                     <h2>Contact: {driver?.contact}</h2>
-                                                    <h2>Next Of Kin: {driver?.next_of_kin_name}</h2>
-                                                    <h2>Relationship: {driver?.relationship}</h2>
+                                                    <h2>Next Of Kin: {driver?.next_of_kin_name.toUpperCase()}</h2>
+                                                    <h2>Relationship: {driver?.relationship.toUpperCase()}</h2>
                                                     <h2>Next Of Kin Contact: {driver?.next_of_kin_contact}</h2>
                                                     <h2>Availability: {driver?.availability}</h2>
                                                 </div>
