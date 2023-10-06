@@ -7,6 +7,7 @@ import { getAllDrivers } from '@/lib/drivers'
 import Link from "next/link";
 import { Card, Flex, Grid } from '@tremor/react';
 import { DeleteButton, AmendButton } from '@/components/button.component'
+import Image from 'next/image'
 
 export const metadata = {
     title: "Drivers"
@@ -41,15 +42,6 @@ export default async function Drivers() {
                                                 alignItems="baseline"
                                                 className="space-x-2"
                                             >
-                                                {driver.title ? <Image
-                                                    src={driver.avatar}
-                                                    alt={driver.name}
-                                                    priority={index === 0} //load the image asap
-                                                    width={640}
-                                                    height={360}
-                                                    className="rounded-t"
-                                                /> : null
-                                                }
                                                 <div className="font-semibold py-1 text-left">
                                                     <h2>{driver?.rank} {driver?.name}</h2>
                                                     <h2>Contact: {driver?.contact}</h2>

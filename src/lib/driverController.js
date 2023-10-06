@@ -71,12 +71,22 @@ const amendDriver = async (req, res) => {
         next_of_kin_contact,
         rank,
         availability,
-        avatar,
         relationship
     } = req.body;
 
     const { id, userId } = req.params
 
+    const driverData = {
+        name,
+        contact,
+        next_of_kin_name,
+        next_of_kin_contact,
+        rank,
+        availability,
+        relationship,
+    };
+
+    console.log(`req.file:${req.file}`)
     const getUserId = await prisma.User.findUnique({
         where: { id: Number(userId) }
     })
@@ -114,22 +124,12 @@ const amendDriver = async (req, res) => {
             next_of_kin_contact: driverId.next_of_kin_contact,
             rank: driverId.rank,
             availability: driverId.availability,
-            avatar: driverId.avatar,
             relationship: driverId.relationship
         };
 
         const editDriver = await prisma.TO.update({
             where: { id: Number(id) },
-            data: {
-                name,
-                contact,
-                next_of_kin_name,
-                next_of_kin_contact,
-                rank,
-                availability,
-                avatar,
-                relationship
-            }
+            data: driverData
         })
 
         // Capture new values
@@ -140,14 +140,13 @@ const amendDriver = async (req, res) => {
             next_of_kin_contact: editDriver.next_of_kin_contact,
             rank: editDriver.rank,
             availability: editDriver.availability,
-            avatar: editDriver.avatar,
             relationship: editDriver.relationship
         };
 
         //Identify which fields have been changed
         const changedFields = Object.keys(newValues).filter(key => {
             if (Array.isArray(newValues[key]) && Array.isArray(oldValues[key]) && newValues[key].length === 0 && oldValues[key].length === 0) {
-                    return false;
+                return false;
             }
             return newValues[key] !== oldValues[key];
         })
@@ -228,8 +227,60 @@ const deleteDriver = async (req, res) => {
     }
 }
 
+const addAvatar = async (req, res) => {
+    const { id, userId } = req.params
+
+    // // Check if the file was uploaded
+    // if (!req.file) {
+    //     return res.status(400).send("No file uploaded");
+    // }
+
+    const getUserId = await prisma.User.findUnique({
+        where: { id: Number(userId) }
+    })
+
+    if (!getUserId) {
+        return res.status(501).send("Error, Invalid User")
+    }
+
+    const driverId = await prisma.TO.findUnique({
+        where: { id: Number(id) },
+    })
+
+    if (!driverId) {
+        return res.status(501).send("Error, Driver profile not found")
+    }
+
+    try {
+        const updateDriverAvatar = await prisma.TO.update({
+            where: { id: Number(id) },
+            data: {
+                avatar: req.file.buffer
+            }
+        })
+
+        if (updateDriverAvatar.avatar !== driverId.avatar) {
+            await prisma.updateHistory.create({
+                data: {
+                    updatedByUserId: Number(userId),
+                    toId: Number(id),
+                    fields: JSON.stringify(['avatar']),
+                    beforeValues: JSON.stringify({ avatar: driverId.avatar }),
+                    afterValues: JSON.stringify({ avatar: updateDriverAvatar.avatar }),
+                    updatedAt: new Date(),
+                }
+            })
+        }
+
+        res.status(200).send(`Avatar updated successfully: ${JSON.stringify(updateDriverAvatar)}`);
+    } catch (e) {
+        return res.status(503).send(`Error updating avatar image for driver: ${e}`)
+    }
+}
+
 module.exports = {
     createDriver,
     amendDriver,
-    deleteDriver
+    deleteDriver,
+    addAvatar
 };

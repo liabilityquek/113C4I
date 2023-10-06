@@ -20,14 +20,12 @@ const AmendDriverDetailsForm = ({
   useEffect(() => {
     if (driver) {
       setValue('rank', driver.rank);
-      console.log(`avatar data: ${driver.avatar}`)
       setValue('name', driver.name);
       setValue('contact', driver.contact);
       setValue('kin', driver.next_of_kin_name);
       setValue('kinContact', driver.next_of_kin_contact);
       setValue('relationship', driver.relationship);
       setValue('availability', driver.availability);
-      setValue('avatar', driver.avatar)
       setValue('relationship', driver.relationship);
     }
   }, [driver, setValue]);
@@ -46,28 +44,17 @@ const AmendDriverDetailsForm = ({
 };
 
   const onSubmit = async (data) => {
-    // console.log(`data: ${JSON.stringify(data, null, 2)}`);
-    const formData = new FormData();
-    formData.append('files', data.avatar)
-    data = { ...data, avatar: data.avatar[0]?.name };
-
-    Object.keys(data).forEach(key => {
-    if(data[key] !== undefined && data[key] !== null && key !== 'avatar') {
-      formData.append(key, data[key]);
-    }
-  });
-
-  for (var pair of formData.entries()) {
-    console.log(pair[0]+ ', ' + pair[1]);
-}
-
+    console.log(`data: ${JSON.stringify(data, null, 2)}`);
     try {
       setLoading(true);
       const response = await fetch(
         `${NEXT_PUBLIC_BASEURL}/api/server/amend-driver/${userId}/${driverId}`,
         {
           method: "PUT",
-          body: formData,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
         }
       );
       if (response.ok) {
@@ -92,10 +79,9 @@ const AmendDriverDetailsForm = ({
     }
   };
 
-  if(!driver) return setLoading(true)
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} >
           <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
             Rank
             </label>
@@ -186,36 +172,12 @@ const AmendDriverDetailsForm = ({
           </select>
         )}
       />
-      <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-          Upload Avatar
-          </label>
-          <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
-<Controller
-  name='avatar'
-  className="w-full py-2 px-4 rounded-md"
-  control={control}
-  render={({ field: { value, onChange, ...field } }) => {
-    return (
-      <input
-        {...field}
-        value={value?.fileName}
-        onChange={(e) => {
-          onChange(e.target.files[0]);
-          console.log("Form State after File Selection: ", watch());
-        }}
-        type="file"
-      />
-    );
-  }}
-/>
-
-</div>
 
         <div className="mt-4">
           <button
             type="submit"
             disabled={disable}
-            className={`px-4 py-2 flex justify-center items-center w-full cursor-pointer rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2  ${
+            className={`px-4 py-2 flex justify-center items-center w-full cursor-pointer rounded-md border border-transparent text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2  ${
               disable
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                 : "bg-blue-100 text-blue-900 hover:bg-blue-200"
@@ -228,7 +190,7 @@ const AmendDriverDetailsForm = ({
         </div>
       <div className="mt-4">
       <button
-            className='px-4 py-2 flex justify-center items-center w-full cursor-pointer rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-blue-100 text-blue-900 hover:bg-blue-200'
+            className='px-4 py-2 flex justify-center items-center w-full cursor-pointer rounded-md border border-transparent text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-blue-100 text-blue-900 hover:bg-blue-200'
             onClick={close}
           >
             Cancel
