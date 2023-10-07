@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
+import { CustomLabel, ErrorClass } from './classes';
 
 const NEXT_PUBLIC_BASEURL = process.env.NEXT_PUBLIC_BASEURL;
 
@@ -13,7 +14,7 @@ const AmendDriverDetailsForm = ({
   userId,
   setServerError,
 }) => {
-  const { handleSubmit, register, setValue, watch, control, formState: { errors } } = useForm();
+  const { handleSubmit, register, setValue, watch, control, formState: { errors } } = useForm()
   
   const availabilityOptions = ['PRESENT', 'DEFERRED']
 
@@ -82,9 +83,10 @@ const AmendDriverDetailsForm = ({
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)} >
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+
+      <CustomLabel>
             Rank
-            </label>
+        </CustomLabel>
         <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
             <input
               {...register("rank", { required: true })}
@@ -92,11 +94,12 @@ const AmendDriverDetailsForm = ({
               className="w-full py-2 px-4 rounded-md"
               style={{ textTransform: "uppercase" }}
             />
-            {errors.rank && <p className="text-red-500 text-xs italic">Rank is required</p>}
+            {errors.rank && <ErrorClass error="Rank is required" />}
         </div>
-        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+
+        <CustomLabel>
           Name
-          </label>
+          </CustomLabel>
         <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
           <input
             {...register("name", { required: true })}
@@ -104,11 +107,12 @@ const AmendDriverDetailsForm = ({
             className="w-full py-2 px-4 rounded-md"
             style={{ textTransform: "uppercase" }}
           />
-          {errors.name && <p className="text-red-500 text-xs italic">Name is required</p>}
+          {errors.name && <ErrorClass error="Name is required" />}
         </div>
-        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+
+        <CustomLabel>
           Contact
-          </label>
+          </CustomLabel>
         <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
             <input
               {...register("contact", { required: true, maxLength: 8, pattern: /^[0-9]{8}$/ })}
@@ -117,11 +121,12 @@ const AmendDriverDetailsForm = ({
               className="w-full py-2 px-4 rounded-md"
               style={{ textTransform: "uppercase" }}
             />
-            {errors.contact && <p className="text-red-500 text-xs italic">Contact No must be 8 numeric digits</p>}
+            {errors.contact && <ErrorClass error="Contact No must be 8 numeric digits" />}
           </div>
-        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+
+        <CustomLabel>
           Next of Kin
-          </label>
+          </CustomLabel>
         <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
           <input
             {...register("kin", { required: true })}
@@ -129,11 +134,12 @@ const AmendDriverDetailsForm = ({
             className="w-full py-2 px-4 rounded-md"
             style={{ textTransform: "uppercase" }}
           />
-          {errors.kin && <p className="text-red-500 text-xs italic">Next of kin is required</p>}
+          {errors.kin && <ErrorClass error="Next of kin is required" />}
         </div>
-        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+
+        <CustomLabel>
           Relationship
-          </label>
+          </CustomLabel>
         <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
           <input
             {...register("relationship", { required: true })}
@@ -141,11 +147,12 @@ const AmendDriverDetailsForm = ({
             className="w-full py-2 px-4 rounded-md"
             style={{ textTransform: "uppercase" }}
           />
-          {errors.kinContact && <p className="text-red-500 text-xs italic">Next of Kin contact no must be 8 numeric digits</p>}
-          </div>        
-        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+          {errors.relationship && <ErrorClass error="Relationship is required" />}
+          </div> 
+
+        <CustomLabel>
           Next of Kin Contact
-          </label>
+          </CustomLabel>
         <div className="mb-4 w-full border-2 border-gray-600 rounded-md">
           <input
             {...register("kinContact", { required: true, maxLength: 8, pattern: /^[0-9]{8}$/ })}
@@ -154,11 +161,12 @@ const AmendDriverDetailsForm = ({
             className="w-full py-2 px-4 rounded-md"
             style={{ textTransform: "uppercase" }}
           />
-          {errors.kinContact && <p className="text-red-500 text-xs italic">Next of Kin contact no must be 8 numeric digits</p>}
+          {errors.kinContact && <ErrorClass error="Next of Kin contact no must be 8 numeric digits" />}
           </div>
-        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+
+        <CustomLabel>
           Availability
-          </label>
+          </CustomLabel>
           <Controller
         name="availability" // Name of the field, you will access the value using this name in the submit handler.
         control={control}
@@ -173,7 +181,7 @@ const AmendDriverDetailsForm = ({
         )}
       />
 
-        <div className="mt-4">
+      <div className="mt-4">
           <button
             type="submit"
             disabled={disable}
@@ -188,17 +196,19 @@ const AmendDriverDetailsForm = ({
             Save Changes
           </button>
         </div>
+      </form>
       <div className="mt-4">
-      <button
+        <button
             className='px-4 py-2 flex justify-center items-center w-full cursor-pointer rounded-md border border-transparent text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-blue-100 text-blue-900 hover:bg-blue-200'
             onClick={close}
-          >
+            >
             Cancel
-          </button>
-          </div>
-      </form>
+        </button>   
+       </div>
     </>
   );
 };
 
 export default AmendDriverDetailsForm;
+
+
