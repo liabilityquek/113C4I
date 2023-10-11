@@ -1,6 +1,5 @@
 import Header from '@/components/navbar.component';
-import { getDriver } from '@/lib/drivers'
-import { getAllDrivers } from '@/lib/drivers'
+import { getDriver, getAllDrivers } from '@/lib/drivers'
 // import checkAdmin from '@/lib/checkAdmin';
 // import { Card, Flex, Grid } from '@tremor/react';
 // import { DeleteButton, AmendButton } from '@/components/button.component'

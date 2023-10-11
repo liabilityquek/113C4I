@@ -28,7 +28,7 @@ export async function getDriver(name) {
   const response = await fetch(url);
 
   if (!response.ok) {
-    throw new Error('Failed to fetch driver');
+    throw new Error(`Error fetching driver data ${response.status} for ${url}`);
   }
 
   return response.json();
@@ -37,11 +37,7 @@ export async function getDriver(name) {
 async function fetchDrivers() {
   const url = `${NEXT_PUBLIC_NEXTAUTH_URL}/api/drivers`
   console.log("fetchDrivers:", url);
-  const response = await fetch(url, {
-    headers: {
-      'Content-Type': 'application/json'
-    },
-  });
+  const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`Error fetching drivers data ${response.status} for ${url}`);
   }
