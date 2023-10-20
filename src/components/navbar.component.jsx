@@ -21,6 +21,7 @@ export default function Header() {
     const userName = user?.name
     const [res, setRes] = useState(null)
     const pathname = usePathname();
+    const [isDropDown, setIsDropDown] = useState(false)
 
     useEffect(() => {
         async function isAdmin() {
@@ -39,6 +40,11 @@ export default function Header() {
         { name: 'Dashboard', href: '/dashboard' },
         { name: 'Drivers', href: '/drivers' },
         { name: 'Vehicles', href: '/vehicles' }
+    ];
+
+    const createNew = [
+        { name: 'Driver Profile', href: '/new-driver' },
+        { name: 'Vehicle Profile', href: '/new-vehicle' },
     ];
 
     console.log(`navbar: ${user?.name}`)
@@ -77,6 +83,7 @@ export default function Header() {
                                         </a>
                                     ))}
                                     {res ? (
+                                        <>
                                         <a
                                             href="/book-out-request"
                                             className={classNames(
@@ -89,6 +96,42 @@ export default function Header() {
                                         >
                                             Book Out Request
                                         </a>
+
+                                        <button
+                                        onClick={() => setIsDropDown(!isDropDown)}
+                                        className='border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium'>
+                                            Create New
+                                            <svg className="w-2.5 h-2.5 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6" fill="none">
+                                                <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                                            </svg>
+                                            </button>
+                                            {isDropDown && (
+                                                <div className="bg-gray-200 rounded-lg relative top-full mt-1">
+                                            <ul>
+                                                {createNew.map((item) => (
+                                                <li>
+                                                    <a
+                                                        key={item.name}
+                                                        href={item.href}
+                                                        className={classNames(
+                                                            pathname === item.href
+                                                                ? 'border-slate-500 text-gray-900'
+                                                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+                                                            'inline-flex items-center px-3 pt-2 border-b-2 text-sm font-medium'
+                                                        )}
+                                                        aria-current={pathname === item.href ? 'page' : undefined}
+                                                    >
+                                                        {item.name}
+                                                    </a>
+                                            </li>
+                                                ))}
+
+                                            </ul>
+                                                </div>
+
+                                            )}
+                                            </>
+
                                     ) : null}
 
                                 </div>
@@ -194,6 +237,7 @@ export default function Header() {
                                 </Disclosure.Button>
                             ))}
                             {res ? (
+                                <>
                                 <Disclosure.Button
                                     as="a"
                                     href="/book-out-request"
@@ -207,6 +251,44 @@ export default function Header() {
                                 >
                                     Book Out Request
                                 </Disclosure.Button>
+
+                                <button
+                                        onClick={() => setIsDropDown(!isDropDown)}
+                                        className='border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium'>
+                                            <div className='flex items-center'>
+                                            Create New
+                                            <svg className="w-2.5 h-2.5 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6" fill="none">
+                                                <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                                            </svg>
+                                            </div>
+                                </button>
+                                            {isDropDown && (
+                                                <div className="bg-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800">
+                                            <ul>
+                                                {createNew.map((item) => (
+                                                <li>
+                                                    <Disclosure.Button
+                                                        key={item.name}
+                                                        as="a"
+                                                        href={item.href}
+                                                        className={classNames(
+                                                            pathname === item.href
+                                                                ? 'bg-slate-50 border-slate-500 text-slate-700'
+                                                                : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800',
+                                                            'block pl-3 pr-4 py-2 border-l-4 text-base font-medium'
+                                                        )}
+                                                        aria-current={pathname === item.href ? 'page' : undefined}
+                                                    >
+                                                        {item.name}
+                                                    </Disclosure.Button>
+                                            </li>
+                                                ))}
+
+                                            </ul>
+                                                </div>
+
+                                            )}
+                                </>
                             ) : null}
 
                         </div>

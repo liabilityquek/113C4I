@@ -1,5 +1,8 @@
 import Header from '@/components/navbar.component';
 import { getDriver, getAllDrivers } from '@/lib/drivers'
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
 // import checkAdmin from '@/lib/checkAdmin';
 // import { Card, Flex, Grid } from '@tremor/react';
 // import { DeleteButton, AmendButton } from '@/components/button.component'
@@ -10,13 +13,18 @@ export async function generateMetadata({ params: { name } }) {
   return driver ? { title: driver.name } : notFound();
 }
 
-export async function generateStaticParams() {
-  const { drivers } = await getAllDrivers()
-  return drivers.map(driver => ({ name: driver.name }))
-}
+// export async function generateStaticParams() {
+//   const { drivers } = await getAllDrivers()
+//   return drivers.map(driver => ({ name: driver.name }))
+// }
 
 
 export default async function Driver({ params: { name } }) {
+
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    redirect("/");
+}
 
   const driver = await getDriver(name)
 

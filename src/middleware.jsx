@@ -33,5 +33,5 @@ export async function middleware(req) {
 
 // export const config = {
 //   // ensures that any route other than those for the singpass, trainer, admin and api directories will be protected
-//   matcher: ["/((?!|api|login|admin|trainer|singpass|https://api.id.gov.sg).*)"],
+//   matcher: [`/((?!|api|login|admin|trainer|singpass|https://api.id.gov.sg).*)`],
 // };
