@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 
 const NEXT_PUBLIC_BASEURL = process.env.NEXT_PUBLIC_BASEURL
 
-const ResetPasswordForm = () => {
+const NewVehicle = () => {
     const [revealPassword, setRevealPassword] = useState(false);
     const [serverError, setServerError] = useState(null)
     const [loading, setLoading] = useState(false)
@@ -107,4 +107,4 @@ const ResetPasswordForm = () => {
     );
 };
 
-export default ResetPasswordForm;
+export default NewVehicle;

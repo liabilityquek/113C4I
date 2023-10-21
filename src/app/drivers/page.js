@@ -30,9 +30,7 @@ export default async function Drivers() {
         <>
             <Header />
             <div className="flex justify-center items-center mt-5">
-                <div className="w-48 md:w-64 lg:w-80">
                     <SearchBox />
-                </div>
             </div>
             <>
                 <main className="p-4 md:p-10 mx-auto max-w-7xl">
@@ -57,6 +55,10 @@ export default async function Drivers() {
                                                         <h2>Relationship: {driver?.relationship.toUpperCase()}</h2>
                                                         <h2>Next Of Kin Contact: {driver?.next_of_kin_contact}</h2>
                                                         <h2>Availability: {driver?.availability}</h2>
+                                                        {driver.vehicles.length > 0 ? 
+                                                        (
+                                                            <h2>Vehicle/s: {driver?.vehicles}</h2>
+                                                        ) : null}
                                                     </div>
                                                 </Flex>
                                             </>

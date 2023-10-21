@@ -14,11 +14,12 @@ export default function SearchBox() {
     console.log(`selected: ${JSON.stringify(selectedDriver, null, 2)}`)
     const NEXT_PUBLIC_NEXTAUTH_URL = process.env.NEXT_PUBLIC_NEXTAUTH_URL;
 
+    
     useEffect(() => {
         (async () => {
             try{
                 const response = await fetch(`${NEXT_PUBLIC_NEXTAUTH_URL}/api/search-driver?query=`
-                    + encodeURIComponent(query));
+                + encodeURIComponent(query));
                 const data = await response.json();
                 console.log(`SearchBox: ${JSON.stringify(data, null, 2)}`)
                 setDrivers(data.drivers);
@@ -29,7 +30,7 @@ export default function SearchBox() {
         })();
 
         if(error){
-            router.pursh('/not-found')
+            router.push('/not-found')
         }
 
     }, [query])
@@ -48,7 +49,7 @@ export default function SearchBox() {
                     placeholder='Search driver...'
                     onChange={(event) => setQuery(event.target.value)} />
 
-                <Combobox.Options className="absolute bg-white py-1 w-full">
+                <Combobox.Options className="absolute bg-gray-50 py-1 w-full z-10">
                     {drivers.length > 0 && drivers.map((driver) => (
                         <Combobox.Option key={driver.name} value={driver}>
                             {({ active }) => {

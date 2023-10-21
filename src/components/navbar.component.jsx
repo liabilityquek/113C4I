@@ -219,7 +219,7 @@ export default function Header() {
                     </div>
 
                     <Disclosure.Panel className="sm:hidden">
-                        <div className="space-y-1 pt-2 pb-3">
+                        <div className="space-y-1 pt-2">
                             {navigation.map((item) => (
                                 <Disclosure.Button
                                     key={item.name}
@@ -254,7 +254,7 @@ export default function Header() {
 
                                 <button
                                         onClick={() => setIsDropDown(!isDropDown)}
-                                        className='border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium'>
+                                        className='text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium'>
                                             <div className='flex items-center'>
                                             Create New
                                             <svg className="w-2.5 h-2.5 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6" fill="none">

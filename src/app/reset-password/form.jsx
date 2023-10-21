@@ -31,7 +31,7 @@ const ResetPasswordForm = () => {
                 },
                 body: JSON.stringify(data)
             });
-            if (response.status === 400) {
+            if (!response.status) {
                 const errorText = await response.text();
                 setLoading(false);
                 setServerError(errorText);

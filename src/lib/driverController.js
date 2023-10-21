@@ -50,7 +50,7 @@ const createDriver = async (req, res) => {
             data: createData
         });
 
-        res.status(200).send(`Driver profile successfully created!, ${createDriverProfile}`);
+        res.status(200).send(`Driver profile successfully created!`);
     } catch (e) {
         if (e instanceof Yup.ValidationError) {
             console.log("Yup Error:", e.errors);

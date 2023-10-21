@@ -1,18 +1,5 @@
 const NEXT_PUBLIC_NEXTAUTH_URL = process.env.NEXT_PUBLIC_NEXTAUTH_URL
 
-export async function searchReview(query) {
-  const { data } = await fetchDrivers({
-    filters: { name: { $containsi: query } },
-    fields: ["name", "title"],
-    sort: ["title"],
-    pagination: { pageSize: 5, withCount: false },
-  });
-  return data.map(({ attributes }) => ({
-    name: attributes.name,
-    title: attributes.title,
-  }))
-}
-
 export async function getAllDrivers(pageSize, page) {
   const data = await fetchDrivers()
   return {

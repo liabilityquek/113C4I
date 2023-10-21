@@ -6,7 +6,7 @@ import { signOut } from "next-auth/react";
 import { Dialog, Transition } from "@headlessui/react";
 import { DeleteModal, AmendModal } from "./modal.component";
 
-const NEXT_PUBLIC_NEXTAUTH_URL = process.env.NEXT_PUBLIC_NEXT_PUBLIC_NEXTAUTH_URL;
+const NEXT_PUBLIC_NEXTAUTH_URL = process.env.NEXT_PUBLIC_NEXTAUTH_URL;
 const NEXT_PUBLIC_BASEURL = process.env.NEXT_PUBLIC_BASEURL;
 
 export const LogoutButton = () => {

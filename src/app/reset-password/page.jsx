@@ -1,5 +1,9 @@
 import ResetPasswordForm from "./form";
 
+export const metadata = {
+    title: "Reset Password",
+  };
+
 const ForgetPassword = () => {
 
     return (
