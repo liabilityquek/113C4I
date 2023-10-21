@@ -106,7 +106,7 @@ export default function Header() {
                                             </svg>
                                             </button>
                                             {isDropDown && (
-                                                <div className="bg-gray-200 rounded-lg relative top-full mt-1">
+                                                <div className="bg-gray-200 rounded-lg ">
                                             <ul>
                                                 {createNew.map((item) => (
                                                 <li>

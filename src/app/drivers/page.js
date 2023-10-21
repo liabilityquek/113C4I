@@ -7,6 +7,7 @@ import { getAllDrivers } from '@/lib/drivers'
 import Link from "next/link";
 import { Card, Flex, Grid } from '@tremor/react';
 import { DeleteButton, AmendButton } from '@/components/button.component'
+import SearchBox from '@/components/searchbox.component'
 // import Image from 'next/image'
 
 export const metadata = {
@@ -28,6 +29,11 @@ export default async function Drivers() {
     return (
         <>
             <Header />
+            <div className="flex justify-center items-center mt-5">
+                <div className="w-48 md:w-64 lg:w-80">
+                    <SearchBox />
+                </div>
+            </div>
             <>
                 <main className="p-4 md:p-10 mx-auto max-w-7xl">
                     {drivers && drivers.length > 0 ? (

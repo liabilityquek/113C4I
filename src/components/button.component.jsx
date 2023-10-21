@@ -6,7 +6,7 @@ import { signOut } from "next-auth/react";
 import { Dialog, Transition } from "@headlessui/react";
 import { DeleteModal, AmendModal } from "./modal.component";
 
-const NEXTAUTH_URL = process.env.NEXT_PUBLIC_NEXTAUTH_URL;
+const NEXT_PUBLIC_NEXTAUTH_URL = process.env.NEXT_PUBLIC_NEXT_PUBLIC_NEXTAUTH_URL;
 const NEXT_PUBLIC_BASEURL = process.env.NEXT_PUBLIC_BASEURL;
 
 export const LogoutButton = () => {
@@ -18,14 +18,14 @@ export const LoginButton = () => {
     {
       value: "singpass",
       label: "Login with Singpass app",
-      link: `${NEXTAUTH_URL}/singpass`,
+      link: `${NEXT_PUBLIC_NEXTAUTH_URL}/singpass`,
     },
     {
       value: "trainer",
       label: "Login as Trainer",
-      link: `${NEXTAUTH_URL}/trainer`,
+      link: `${NEXT_PUBLIC_NEXTAUTH_URL}/trainer`,
     },
-    { value: "admin", label: "Login as Admin", link: `${NEXTAUTH_URL}/admin` },
+    { value: "admin", label: "Login as Admin", link: `${NEXT_PUBLIC_NEXTAUTH_URL}/admin` },
   ];
 
   return (
