@@ -7,7 +7,8 @@ import { getAllDrivers } from '@/lib/drivers'
 import Link from "next/link";
 import { Card, Flex, Grid } from '@tremor/react';
 import { DeleteButton, AmendButton } from '@/components/button.component'
-import SearchBox from '@/components/searchbox.component'
+import SearchBox from './searchbox'
+import Pagination from '@/components/Pagination'
 // import Image from 'next/image'
 
 export const metadata = {
@@ -24,6 +25,7 @@ export default async function Drivers() {
     const userName = session?.user?.name;
     const userId = session?.user?.id
     const isAdmin = await checkAdmin(userName)
+    // const { drivers } = await getAllDrivers(pageSize, page)
     const { drivers } = await getAllDrivers()
 
     return (
@@ -39,7 +41,6 @@ export default async function Drivers() {
                             {drivers.map((driver, index) => (
                                 <Card className='hover:shadow-xl cursor-pointer border-green-500 '>
 
-                                    {isAdmin ? (
                                         <Link href={`/drivers/${driver.name}`} prefetch={false}>
                                             <>
                                                 <Flex
@@ -64,26 +65,6 @@ export default async function Drivers() {
                                             </>
                                         </Link>
 
-                                    ) : (
-                                        <>
-                                            <Flex
-                                                justifyContent="start"
-                                                alignItems="baseline"
-                                                className="space-x-2"
-                                                key={index}
-                                            >
-                                                <div className="font-semibold py-1 text-left">
-                                                    <h2>{driver?.rank.toUpperCase()} {driver?.name.toUpperCase()}</h2>
-                                                    <h2>Contact: {driver?.contact}</h2>
-                                                    <h2>Next Of Kin: {driver?.next_of_kin_name.toUpperCase()}</h2>
-                                                    <h2>Relationship: {driver?.relationship.toUpperCase()}</h2>
-                                                    <h2>Next Of Kin Contact: {driver?.next_of_kin_contact}</h2>
-                                                    <h2>Availability: {driver?.availability}</h2>
-                                                </div>
-                                            </Flex>
-                                        </>
-                                    )}
-
                                     {isAdmin ? (
                                         <div className='cursor-pointer mt-4 flex justify-between'>
                                             <DeleteButton driver={driver?.name} driverId={driver.id} />
@@ -101,6 +82,7 @@ export default async function Drivers() {
                     }
 
                 </main>
+                {/* <Pagination page={page} pageCount={pageCount} href='/drivers'/> */}
             </>
         </>
     );

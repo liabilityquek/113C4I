@@ -8,12 +8,10 @@ export async function GET(request) {
                 vehicles: true,
                 book_out: true
             },
-            orderBy: {
-                name: 'asc'
-            },
-            orderBy: {
-                availability: 'desc'
-            }
+            orderBy: [
+                { name: 'asc' },
+                { availability: 'desc' }
+            ]
         });
 
         if (drivers.length > 0) {

@@ -41,7 +41,7 @@
     "src/app/success/error.jsx",
     "src/app/logout/page.jsx",
     "src/app/dashboard/page.jsx",
-    "src/components/Login.jsx",
+    "src/components/login.component.jsx",
     "src/lib/store.js",
     "src/app/singpass/error.jsx",
     "src/lib/hooks.js",

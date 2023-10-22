@@ -56,7 +56,7 @@ export default function SearchBox() {
                                 console.log('Is active:', active);
                                 return (
                                     <div className={`block px-2 truncate w-full ${active ? 'bg-blue-100 cursor-pointer' : ''}`}>
-                                        {driver.name}
+                                        {driver.name.toUpperCase()}
                                     </div>
                                 );
                             }}
