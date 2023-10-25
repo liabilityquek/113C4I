@@ -12,7 +12,7 @@ export async function getAllDrivers(pageSize, page) {
   // console.log(`data: ${JSON.stringify(data, null, 2)}`)
   return {
     drivers: data, 
-    pageCount: Math.ceil(data.length / pageSize) // This is a simple calculation and might not be accurate if the API has more data
+    pageCount: Math.ceil(data.length / pageSize)
   };
 }
 

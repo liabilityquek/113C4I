@@ -8,9 +8,8 @@ export const metadata = {
   title: "New Vehicle Profile",
 };
 
-export default async function Dashboard() {
+export default async function CreateVehicle() {
   const session = await getServerSession(authOptions);
-  console.log(`session in dashboard: ${JSON.stringify(session, null, 2)}`);
   if (!session) {
     redirect("/");
   }

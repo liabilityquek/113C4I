@@ -9,9 +9,8 @@ export const metadata = {
   title: "New Driver Profile",
 };
 
-export default async function Dashboard() {
+export default async function CreateDriver() {
   const session = await getServerSession(authOptions);
-  console.log(`session in dashboard: ${JSON.stringify(session, null, 2)}`);
   if (!session) {
     redirect("/");
   }
