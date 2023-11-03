@@ -1,14 +1,26 @@
 'use client'
 
 import { Combobox } from "@headlessui/react"
-import { useState, useEffect } from "react"
+import { debounce } from 'lodash'
+import { useState, useEffect, useRef } from "react"
 
 
 export default function SearchBox({ onSearch }) {
+    const debounceOnChange = useRef(
+        debounce((value) => {
+            onSearch(value)
+        }, 300)
+    ).current
 
     const handleChange = (e) => {
-        onSearch(e.target.value)
+        debounceOnChange(e.target.value)
     }
+
+    useEffect(() => {
+        return () => {
+            debounceOnChange.cancel()
+        }
+    }, [debounceOnChange])
 
     return (
         <div className="relative w-48">
