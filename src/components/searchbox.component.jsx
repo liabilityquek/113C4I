@@ -9,7 +9,7 @@ export default function SearchBox({ onSearch }) {
     const debounceOnChange = useRef(
         debounce((value) => {
             onSearch(value)
-        }, 300)
+        }, 500)
     ).current
 
     const handleChange = (e) => {
