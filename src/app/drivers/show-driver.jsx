@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { useState, useEffect } from "react"
 import { Card, Flex, Grid } from '@tremor/react';
-import Pagination from '@/components/Pagination'
 import SearchBox from '@/components/searchbox.component';
 import DriverCards from './driver-cards'
+import { PageSize } from '@/components/Pagination'
 
 const NEXT_PUBLIC_NEXTAUTH_URL = process.env.NEXT_PUBLIC_NEXTAUTH_URL
 
@@ -13,6 +13,7 @@ export default function ShowDrivers({ drivers, isAdmin, userId }) {
     const [searchQuery, setSearchQuery] = useState(null);
     const [searchDriver, setSearchDriver] = useState([])
     const [loading, setLoading] = useState(false);
+    const [dropdown, setDropdown] = useState(false); 
     
     useEffect(() => {
         if (!searchQuery) return;
@@ -34,7 +35,11 @@ export default function ShowDrivers({ drivers, isAdmin, userId }) {
     return (
         <>
             <div className="flex justify-center items-center mt-5">
-                    <SearchBox onSearch={setSearchQuery}/>
+                <SearchBox onSearch={setSearchQuery}/>
+            </div>
+            
+            <div className="flex justify-center items-center mt-5">
+                <PageSize />
             </div>
 
             {loading ? (
@@ -66,7 +71,6 @@ export default function ShowDrivers({ drivers, isAdmin, userId }) {
                     </main>
                 )
             )}
-            {/* <Pagination page={page} pageCount={pageCount} href='/drivers'/> */}
         </>
     );
 }

@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import Header from '@/components/navbar.component';
 import checkAdmin from '@/lib/checkAdmin';
 import { getAllDrivers } from '@/lib/drivers'
-import Pagination from '@/components/Pagination'
+import { Pagination } from '@/components/Pagination'
 import ShowDrivers from './show-driver'
 // import Image from 'next/image'
 
@@ -27,6 +27,7 @@ export default async function Drivers() {
         <>
         <Header />
         <ShowDrivers drivers={drivers} isAdmin={isAdmin} userId={userId}/>
+        <Pagination />
         </>
     );
 }
