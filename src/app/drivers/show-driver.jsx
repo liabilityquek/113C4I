@@ -51,7 +51,7 @@ export default function ShowDrivers({ isAdmin, userId }) {
             }
         }
         fetchDrivers()
-    }, [])
+    }, [page, pageSize])
 
     return (
         <>

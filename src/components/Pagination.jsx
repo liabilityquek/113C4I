@@ -1,11 +1,13 @@
 'use client'
 
+import Link from "next/link";
 import { Menu, Transition } from '@headlessui/react'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 
 export function Pagination({ page, pageCount, href }) {
 
+  console.log(`pageCount: ${pageCount}`)
     return (
         <div className="flex justify-center items-center my-2">
             <ul className="list-style-none flex">
@@ -29,11 +31,11 @@ export function Pagination({ page, pageCount, href }) {
 
 function Paginationitem({ href, children }) {
     return (
-        <item href={href}
-            className="hover:font-bold cursor-pointer relative block rounded-full bg-transparent px-3 py-1.5 text-sm text-neutral-500 transition-all duration-300 dark:text-neutral-400"
-        >
+        <Link href={href}
+          className="hover:font-bold cursor-pointer relative block rounded-full bg-transparent px-3 py-1.5 text-sm text-neutral-500 transition-all duration-300 dark:text-neutral-400"
+          >
             {children}
-        </item>
+        </Link>
     )
 }
 
