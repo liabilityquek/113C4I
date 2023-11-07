@@ -12,7 +12,6 @@ export async function getAllDrivers(pageSize, page) {
   // console.log(`data: ${JSON.stringify(data, null, 2)}`)
   return {
     drivers: data, 
-    pageCount: Math.ceil(data.length / pageSize)
   };
 }
 

@@ -1,6 +1,5 @@
 'use client'
 
-import item from "next/item";
 import { Menu, Transition } from '@headlessui/react'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
@@ -38,8 +37,13 @@ function Paginationitem({ href, children }) {
     )
 }
 
-export function PageSize (){
-    const itemsPerPage = [5, 10, 15, 20]
+export function PageSize ({ pageSize, setPageSize }){
+    const itemsPerPage = [1, 2, 3, 20]
+    
+
+    const handleSetPageSize = (count) => {
+      setPageSize(count)
+    }
       
         return (
             <Menu as="div" className="relative inline-block">
@@ -63,16 +67,13 @@ export function PageSize (){
                 {/* Set the dropdown width to full to match the button and add z-index */}
                 <Menu.Items>
                   {itemsPerPage.map((item) => (
-                    <Menu.Item key={item}>
-                      {({ active }) => (
+                    <Menu.Item key={item}
+                    className='group flex justify-center w-full items-center px-2 py-2 text-sm text-black bg-blue-100 hover:bg-white'>
                         <button
-                          className={`${
-                            active ? ' text-black' : 'text-black bg-blue-100'
-                          } group flex w-full items-center px-2 py-2 text-sm`}
+                        onClick={() => handleSetPageSize(item)}
                         >
                           {item}
                         </button>
-                      )}
                     </Menu.Item>
                   ))}
                 </Menu.Items>
