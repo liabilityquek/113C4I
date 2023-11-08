@@ -15,10 +15,12 @@ export default function ShowDrivers({ isAdmin, userId }) {
     const [searchQuery, setSearchQuery] = useState(null);
     const [drivers, setDrivers] = useState([])
     const [searchDriver, setSearchDriver] = useState([])
+    const [fullDriversLength, setFullDriversLength] = useState(null)
     const [loading, setLoading] = useState(false);
     const [pageSize, setPageSize] = useState(5)
     const searchParams = useSearchParams()
-    const page = searchParams.get('page') || 1
+    const page = searchParams.get('page') | 1
+    console.log(`page: ${page}`)
 
     useEffect(() => {
         if (!searchQuery) return;
@@ -41,8 +43,9 @@ export default function ShowDrivers({ isAdmin, userId }) {
         const fetchDrivers = async () => {
             setLoading(true)
             try{
-                const { drivers } = await getAllDrivers(pageSize, page)
+                const { drivers, driversCount } = await getAllDrivers(pageSize, page)
                 setDrivers(drivers)
+                setFullDriversLength(driversCount)
 
             }catch(err){
                 console.error(`Error loading this page: ${err}`)
@@ -92,7 +95,7 @@ export default function ShowDrivers({ isAdmin, userId }) {
                                     <DriverCards key={driver.id} driver={driver} index={index} isAdmin={isAdmin} />
                                 ))}
                             </Grid>
-                            <Pagination page={page} pageCount={Math.ceil(drivers.length / pageSize)} href="/drivers"/>
+                            <Pagination page={page} pageCount={Math.ceil(fullDriversLength / pageSize)} href="/drivers"/>
                         </>
                         ) : 'Nothing to show...'}
                     </main>

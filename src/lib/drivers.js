@@ -11,7 +11,8 @@ export async function getAllDrivers(pageSize, page) {
   const data = await response.json()
   // console.log(`data: ${JSON.stringify(data, null, 2)}`)
   return {
-    drivers: data, 
+    drivers: data.drivers, 
+    driversCount: data.driversCount
   };
 }
 
