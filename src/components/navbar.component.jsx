@@ -1,9 +1,7 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import { LogoutButton } from './button.component'
 import { useEffect, useState } from "react";
-import checkAdmin from '@/lib/checkAdmin';
 import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { XMarkIcon, Bars3Icon } from '@heroicons/react/24/outline';
@@ -15,26 +13,9 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
 }
 
-export default function Header() {
-    const { data: session } = useSession();
-    const user = session?.user;
-    const userName = user?.name
-    const [res, setRes] = useState(null)
+export default function NavBar({ isAdmin, userName, userImage, userEmail }) {
     const pathname = usePathname();
     const [isDropDown, setIsDropDown] = useState(false)
-
-    useEffect(() => {
-        async function isAdmin() {
-            try {
-                const result = await checkAdmin(userName)
-                setRes(result)
-            } catch (e) {
-                console.error(`Error fetching res: ${e}`)
-
-            }
-        }
-        isAdmin()
-    }, [userName])
 
     const navigation = [
         { name: 'Dashboard', href: '/dashboard' },
@@ -47,7 +28,7 @@ export default function Header() {
         { name: 'Vehicle Profile', href: '/new-vehicle' },
     ];
 
-    console.log(`navbar: ${user?.name}`)
+    console.log(`navbar: ${userName}`)
 
     return (
         <Disclosure as="nav" className="bg-white shadow-sm">
@@ -82,7 +63,7 @@ export default function Header() {
                                             {item.name}
                                         </a>
                                     ))}
-                                    {res ? (
+                                    {isAdmin ? (
                                         <>
                                         <a
                                             href="/book-out-request"
@@ -141,13 +122,13 @@ export default function Header() {
                                     <div>
                                         <Menu.Button className="flex items-center justify-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2">
                                             <span className="sr-only">Open user menu</span>
-                                            {user?.image ? (
+                                            {userImage ? (
                                                 <Image
                                                     className="h-8 w-8 rounded-full"
-                                                    src={user.image}
+                                                    src={userImage}
                                                     height={32}
                                                     width={32}
-                                                    alt={`${user?.name || 'placeholder'} avatar`}
+                                                    alt={`${userName || 'placeholder'} avatar`}
                                                 />
 
                                             ) : (
@@ -236,7 +217,7 @@ export default function Header() {
                                     {item.name}
                                 </Disclosure.Button>
                             ))}
-                            {res ? (
+                            {isAdmin ? (
                                 <>
                                 <Disclosure.Button
                                     as="a"
@@ -296,13 +277,13 @@ export default function Header() {
                             <>
                                 <div className="flex items-center px-4">
                                     <div className="flex-shrink-0">
-                                        {user?.image ? (
+                                        {userImage ? (
                                             <Image
                                                 className="h-8 w-8 rounded-full"
-                                                src={user.image}
+                                                src={userImage}
                                                 height={32}
                                                 width={32}
-                                                alt={`${user?.name || 'placeholder'} avatar`}
+                                                alt={`${userName || 'placeholder'} avatar`}
                                             />
 
                                         ) : (
@@ -332,10 +313,10 @@ export default function Header() {
                                     </div>
                                     <div className="ml-3">
                                         <div className="text-base font-medium text-gray-800">
-                                            {user?.name}
+                                            {userName}
                                         </div>
                                         <div className="text-sm font-medium text-gray-500">
-                                            {user?.email}
+                                            {userEmail}
                                         </div>
                                     </div>
                                 </div>

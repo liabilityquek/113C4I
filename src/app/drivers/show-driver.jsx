@@ -19,8 +19,7 @@ export default function ShowDrivers({ isAdmin, userId }) {
     const [loading, setLoading] = useState(false);
     const [pageSize, setPageSize] = useState(5)
     const searchParams = useSearchParams()
-    const page = searchParams.get('page') | 1
-    console.log(`page: ${page}`)
+    const page = parseInt(searchParams.get('page')) || 1
 
     useEffect(() => {
         if (!searchQuery) return;
@@ -78,7 +77,7 @@ export default function ShowDrivers({ isAdmin, userId }) {
                         {searchDriver && searchDriver.length > 0 ? (
                         <>
                             <Grid numItemsSm={2} numItemsLg={3} className="gap-6">
-                                {searchDriver.slice((page - 1) * pageSize, page * pageSize).map((driver, index) => (
+                                {searchDriver.map((driver, index) => (
                                     <DriverCards key={driver.id} driver={driver} index={index} isAdmin={isAdmin} />
                                 ))}
                             </Grid>
@@ -91,7 +90,7 @@ export default function ShowDrivers({ isAdmin, userId }) {
                         {drivers && drivers.length > 0 ? (
                         <>
                             <Grid numItemsSm={2} numItemsLg={3} className="gap-6">
-                                {drivers.slice((page - 1) * pageSize, page * pageSize).map((driver, index) => (
+                                {drivers.map((driver, index) => (
                                     <DriverCards key={driver.id} driver={driver} index={index} isAdmin={isAdmin} />
                                 ))}
                             </Grid>

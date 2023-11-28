@@ -16,12 +16,14 @@ export default async function Drivers() {
         redirect("/");
     }
     const userName = session?.user?.name;
+    const userImage = session?.user?.image
+    const userEmail = session?.user?.email
     const userId = session?.user?.id
     const isAdmin = await checkAdmin(userName)
 
     return (
         <>
-        <Header />
+        <Header isAdmin={isAdmin} userName={userName} userImage={userImage} userEmail={userEmail}/>
         <ShowDrivers isAdmin={isAdmin} userId={userId}/>
         
         </>

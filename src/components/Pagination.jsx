@@ -8,6 +8,7 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid'
 export function Pagination({ page, pageCount, href }) {
 
   console.log(`pageCount: ${pageCount}`)
+  
     return (
         <div className="flex justify-center items-center my-2">
             <ul className="list-style-none flex">
@@ -40,11 +41,12 @@ function Paginationitem({ href, children }) {
 }
 
 export function PageSize ({ pageSize, setPageSize }){
-    const itemsPerPage = [1, 2, 3, 20]
+    const itemsPerPage = [5, 10, 15, 20]
     
 
     const handleSetPageSize = (count) => {
       setPageSize(count)
+      console.log(`page size in Pagination: ${pageSize}`)
     }
       
         return (

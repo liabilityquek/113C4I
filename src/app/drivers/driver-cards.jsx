@@ -1,5 +1,3 @@
-'use client'
-
 import Link from "next/link";
 import { Card, Flex, Grid } from '@tremor/react';
 import { DeleteButton, AmendButton } from '@/components/button.component'
