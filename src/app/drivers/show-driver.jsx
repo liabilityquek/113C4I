@@ -8,6 +8,7 @@ import DriverCards from './driver-cards'
 import { PageSize, Pagination } from '@/components/Pagination'
 import { useSearchParams } from 'next/navigation'
 import { getAllDrivers } from '@/lib/drivers'
+import { useRouter } from 'next/navigation'
 
 const NEXT_PUBLIC_NEXTAUTH_URL = process.env.NEXT_PUBLIC_NEXTAUTH_URL
 
@@ -19,41 +20,62 @@ export default function ShowDrivers({ isAdmin, userId }) {
     const [loading, setLoading] = useState(false);
     const [pageSize, setPageSize] = useState(5)
     const searchParams = useSearchParams()
-    const page = parseInt(searchParams.get('page')) || 1
+    const [page, setPage] = useState(parseInt(searchParams.get('page')) || 1)
+    const router = useRouter()
+    
+    const fetchDrivers = async () => {
+        setLoading(true)
+        try{
+            const { drivers, driversCount } = await getAllDrivers(pageSize, page)
+            setDrivers(drivers)
+            setFullDriversLength(driversCount)
 
-    useEffect(() => {
-        if (!searchQuery) return;
-        setLoading(true);
-        (async () => {
-            try {
-                const response = await fetch(`${NEXT_PUBLIC_NEXTAUTH_URL}/api/search-driver?query=` + encodeURIComponent(searchQuery));
-                const data = await response.json();
-                // console.log(`data: ${JSON.stringify(data, null, 2)}`)
-                setSearchDriver(data.drivers);
-            } catch (err) {
-                console.error(`Error loading this page: ${err}`);
-            } finally {
-                setLoading(false); 
-            }
-        })();
-    }, [searchQuery]);
-
-    useEffect(() => {
-        const fetchDrivers = async () => {
-            setLoading(true)
-            try{
-                const { drivers, driversCount } = await getAllDrivers(pageSize, page)
-                setDrivers(drivers)
-                setFullDriversLength(driversCount)
-
-            }catch(err){
-                console.error(`Error loading this page: ${err}`)
-            }finally{
-                setLoading(false)
-            }
+        }catch(err){
+            console.error(`Error loading this page: ${err}`)
+        }finally{
+            setLoading(false)
         }
-        fetchDrivers()
-    }, [page, pageSize])
+    }
+
+    const handlePageSizeChange  = (newPageSize) => {
+        setPageSize(newPageSize)
+        setPage(1)
+        console.log(`newPageSize: ${newPageSize}`)
+        router.push(`/drivers?page=1`);
+    };
+
+    const handlePageChange = (newPage) => {
+        setPage(newPage);
+        router.push(`/drivers?page=${newPage}`);
+    };
+
+
+    useEffect(() => {
+        if (!searchQuery) {
+            fetchDrivers()
+        }else{
+            (async () => {
+                try {
+                    const response = await fetch(`${NEXT_PUBLIC_NEXTAUTH_URL}/api/search-driver?query=` + encodeURIComponent(searchQuery));
+                    const data = await response.json();
+                    // console.log(`data: ${JSON.stringify(data, null, 2)}`)
+                    setSearchDriver(data.drivers);
+                } catch (err) {
+                    console.error(`Error loading this page: ${err}`);
+                } finally {
+                    setLoading(false); 
+                }
+            })();
+        }
+        setLoading(true);
+    }, [searchQuery, page, pageSize]);
+
+    useEffect(() => {
+        if(router.isReady){
+            fetchDrivers()
+            router.push(`/drivers?page=${page}`)
+        }
+    },[router, page, router.isReady])
 
     return (
         <>
@@ -62,7 +84,7 @@ export default function ShowDrivers({ isAdmin, userId }) {
             </div>
             
             <div className="flex justify-center items-center mt-5">
-                <PageSize pageSize={pageSize} setPageSize={setPageSize}/>
+                <PageSize pageSize={pageSize} setPageSize={handlePageSizeChange}/>
             </div>
 
             {loading ? (
@@ -81,7 +103,7 @@ export default function ShowDrivers({ isAdmin, userId }) {
                                     <DriverCards key={driver.id} driver={driver} index={index} isAdmin={isAdmin} />
                                 ))}
                             </Grid>
-                            <Pagination page={page} pageCount={Math.ceil(searchDriver.length / pageSize)} href="/drivers"/>
+                            <Pagination page={page} pageCount={Math.ceil(searchDriver.length / pageSize)} handlePageChange={handlePageChange}/>
                         </>
                         ) : 'Nothing to show...'}
                     </main>
@@ -94,7 +116,7 @@ export default function ShowDrivers({ isAdmin, userId }) {
                                     <DriverCards key={driver.id} driver={driver} index={index} isAdmin={isAdmin} />
                                 ))}
                             </Grid>
-                            <Pagination page={page} pageCount={Math.ceil(fullDriversLength / pageSize)} href="/drivers"/>
+                            <Pagination page={page} pageCount={Math.ceil(fullDriversLength / pageSize)} handlePageChange={handlePageChange}/>
                         </>
                         ) : 'Nothing to show...'}
                     </main>

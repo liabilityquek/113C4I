@@ -117,6 +117,8 @@ export default function NavBar({ isAdmin, userName, userImage, userEmail }) {
 
                                 </div>
                             </div>
+                            {isAdmin ? (
+                                <>
                             <div className="hidden sm:ml-6 sm:flex sm:items-center">
                                 <Menu as="div" className="relative ml-3">
                                     <div>
@@ -159,6 +161,8 @@ export default function NavBar({ isAdmin, userName, userImage, userEmail }) {
 
                                         </Menu.Button>
                                     </div>
+
+                            
                                     <Transition
                                         as={Fragment}
                                         enter="transition ease-out duration-200"
@@ -186,6 +190,10 @@ export default function NavBar({ isAdmin, userName, userImage, userEmail }) {
                                     </Transition>
                                 </Menu>
                             </div>
+                            </>
+                            ) 
+                            : null}
+
                             <div className="-mr-2 flex items-center sm:hidden">
                                 <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2">
                                     <span className="sr-only">Open main menu</span>
@@ -273,6 +281,9 @@ export default function NavBar({ isAdmin, userName, userImage, userEmail }) {
                             ) : null}
 
                         </div>
+                        {
+                            isAdmin ? (
+                            <>
                         <div className="border-t border-gray-200 pt-4 pb-3">
                             <>
                                 <div className="flex items-center px-4">
@@ -330,6 +341,10 @@ export default function NavBar({ isAdmin, userName, userImage, userEmail }) {
                             </>
 
                         </div>
+
+                            </>
+                            ) : null
+                        }
                     </Disclosure.Panel>
                 </>
             )}
