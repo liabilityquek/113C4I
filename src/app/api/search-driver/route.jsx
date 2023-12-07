@@ -1,30 +1,40 @@
 import { NextResponse } from "next/server";
-import { getAllDrivers } from '@/lib/drivers'
-
 
 export async function GET(request){
-    const query = request.nextUrl.searchParams.get('query').toLowerCase();
-    const response = await getAllDrivers();
+    try{
 
-    // Check if response.drivers is an array before filtering
-    if (!response || !Array.isArray(response.drivers)) {
-        // Handle the error accordingly
-        console.error("Error: Expected drivers to be an array but received:", response);
-        return NextResponse.json({ error: "Failed to retrieve drivers." });
-    }
-
-    const filteredDrivers = response.drivers.filter(driver => {
-        return Object.values(driver).some(value => {
-            if (typeof value === "string") {
-                return value.toLowerCase().includes(query);
+        const query = request.nextUrl.searchParams.get('query').toLowerCase();
+        const page = parseInt(request.nextUrl.searchParams.get('page'))
+        const pageSize = parseInt(request.nextUrl.searchParams.get('pageSize'))
+        const skip = (page - 1) * pageSize
+        
+        const filteredDriverCount = await prisma.TO.count({
+            where:{
+                name: { contains: query }
             }
-            return false;
-        });
-    });
+        })
 
-    // Return the filtered drivers within the same structure
-    return NextResponse.json({ 
-        pageCount: response.pageCount, 
-        drivers: filteredDrivers 
-    });
+        const drivers = await prisma.TO.findMany({
+            where: {
+                name: { contains: query }
+            },
+            skip: skip,
+            take: pageSize,
+            orderBy: [
+                { name: 'asc' },
+                { availability: 'desc' }
+            ]
+        })
+
+
+        
+        if(filteredDriverCount > 0) {
+            return new NextResponse(JSON.stringify({ drivers, filteredDriverCount }));
+        } else {
+            return new NextResponse.JSON({ message: "No drivers found" });
+        }
+    } catch(e){
+        return NextResponse.error(`Error getting drivers: ${e}`);
+    }
+    
 }

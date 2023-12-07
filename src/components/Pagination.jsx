@@ -43,7 +43,7 @@ function Paginationitem({ onClick, children }) {
 }
 
 export function PageSize ({ pageSize, setPageSize }){
-    const itemsPerPage = [5, 10, 15, 20]
+    const itemsPerPage = [1, 10, 15, 20]
     
 
     const handleSetPageSize = (count) => {

@@ -24,7 +24,7 @@ export default function DriverCards({ driver, index, isAdmin, userId }) {
                             <h2>Relationship: {driver?.relationship.toUpperCase()}</h2>
                             <h2>Next Of Kin Contact: {driver?.next_of_kin_contact}</h2>
                             <h2>Availability: {driver?.availability}</h2>
-                            {driver.vehicles.length > 0 ? 
+                            {driver?.vehicles?.length > 0 ? 
                                 (
                                     <h2>Vehicle/s: {driver?.vehicles}</h2>
                                     ) : null}
@@ -52,7 +52,7 @@ export default function DriverCards({ driver, index, isAdmin, userId }) {
                             <h2>Relationship: {driver?.relationship.toUpperCase()}</h2>
                             <h2>Next Of Kin Contact: {driver?.next_of_kin_contact}</h2>
                             <h2>Availability: {driver?.availability}</h2>
-                            {driver.vehicles.length > 0 ? 
+                            {driver?.vehicles?.length > 0 ? 
                                 (
                                     <h2>Vehicle/s: {driver?.vehicles}</h2>
                                     ) : null}

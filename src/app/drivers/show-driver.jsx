@@ -18,24 +18,27 @@ export default function ShowDrivers({ isAdmin, userId }) {
     const [searchDriver, setSearchDriver] = useState([])
     const [fullDriversLength, setFullDriversLength] = useState(null)
     const [loading, setLoading] = useState(false);
-    const [pageSize, setPageSize] = useState(5)
+    const [pageSize, setPageSize] = useState(1)
     const searchParams = useSearchParams()
     const [page, setPage] = useState(parseInt(searchParams.get('page')) || 1)
     const router = useRouter()
     
-    const fetchDrivers = async () => {
-        setLoading(true)
-        try{
-            const { drivers, driversCount } = await getAllDrivers(pageSize, page)
-            setDrivers(drivers)
-            setFullDriversLength(driversCount)
+    useEffect(() => {
+        const fetchDrivers = async () => {
+            setLoading(true)
+            try{
+                const { drivers, driversCount } = await getAllDrivers(pageSize, page)
+                setDrivers(drivers)
+                setFullDriversLength(driversCount)
 
-        }catch(err){
-            console.error(`Error loading this page: ${err}`)
-        }finally{
-            setLoading(false)
+            }catch(err){
+                console.error(`Error loading this page: ${err}`)
+            }finally{
+                setLoading(false)
+            }
         }
-    }
+        fetchDrivers()
+    },[page, pageSize])
 
     const handlePageSizeChange  = (newPageSize) => {
         setPageSize(newPageSize)
@@ -48,34 +51,27 @@ export default function ShowDrivers({ isAdmin, userId }) {
         setPage(newPage);
         router.push(`/drivers?page=${newPage}`);
     };
-
+    
 
     useEffect(() => {
-        if (!searchQuery) {
-            fetchDrivers()
-        }else{
+        if (!searchQuery) return
             (async () => {
                 try {
-                    const response = await fetch(`${NEXT_PUBLIC_NEXTAUTH_URL}/api/search-driver?query=` + encodeURIComponent(searchQuery));
+                    const response = await fetch(`${NEXT_PUBLIC_NEXTAUTH_URL}/api/search-driver?query=${encodeURIComponent(searchQuery)}&page=${page}&pageSize=${pageSize}`);
                     const data = await response.json();
                     // console.log(`data: ${JSON.stringify(data, null, 2)}`)
                     setSearchDriver(data.drivers);
+                    setFullDriversLength(data.filteredDriverCount)
+                    console.log(`searchQuery: ${searchQuery}`)
                 } catch (err) {
                     console.error(`Error loading this page: ${err}`);
                 } finally {
                     setLoading(false); 
                 }
             })();
-        }
-        setLoading(true);
     }, [searchQuery, page, pageSize]);
 
-    useEffect(() => {
-        if(router.isReady){
-            fetchDrivers()
-            router.push(`/drivers?page=${page}`)
-        }
-    },[router, page, router.isReady])
+
 
     return (
         <>
@@ -88,40 +84,28 @@ export default function ShowDrivers({ isAdmin, userId }) {
             </div>
 
             {loading ? (
-                 <div className="flex justify-center items-center mt-5">
-                    Loading...
-                </div>
-
-            ) :          
-            (
-                searchQuery ? (
+                <div className="flex justify-center items-center mt-5">Loading...</div>
+            ) : searchQuery ? (
+                searchDriver && searchDriver.length > 0 ? (
                     <main className="p-4 md:p-10 mx-auto max-w-7xl">
-                        {searchDriver && searchDriver.length > 0 ? (
-                        <>
-                            <Grid numItemsSm={2} numItemsLg={3} className="gap-6">
-                                {searchDriver.map((driver, index) => (
-                                    <DriverCards key={driver.id} driver={driver} index={index} isAdmin={isAdmin} />
-                                ))}
-                            </Grid>
-                            <Pagination page={page} pageCount={Math.ceil(searchDriver.length / pageSize)} handlePageChange={handlePageChange}/>
-                        </>
-                        ) : 'Nothing to show...'}
+                        <Grid numItemsSm={2} numItemsLg={3} className="gap-6">
+                            {searchDriver.map((driver, index) => (
+                                <DriverCards key={driver.id} driver={driver} index={index} isAdmin={isAdmin} />
+                            ))}
+                        </Grid>
+                        <Pagination page={page} pageCount={Math.ceil(fullDriversLength / pageSize)} handlePageChange={handlePageChange} />
                     </main>
-                ) : (
-                    <main className="p-4 md:p-10 mx-auto max-w-7xl">
-                        {drivers && drivers.length > 0 ? (
-                        <>
-                            <Grid numItemsSm={2} numItemsLg={3} className="gap-6">
-                                {drivers.map((driver, index) => (
-                                    <DriverCards key={driver.id} driver={driver} index={index} isAdmin={isAdmin} />
-                                ))}
-                            </Grid>
-                            <Pagination page={page} pageCount={Math.ceil(fullDriversLength / pageSize)} handlePageChange={handlePageChange}/>
-                        </>
-                        ) : 'Nothing to show...'}
-                    </main>
-                )
-            )}
+                ) : 'Nothing to show...'
+            ) : drivers && drivers.length > 0 ? (
+                <main className="p-4 md:p-10 mx-auto max-w-7xl">
+                    <Grid numItemsSm={2} numItemsLg={3} className="gap-6">
+                        {drivers.map((driver, index) => (
+                            <DriverCards key={driver.id} driver={driver} index={index} isAdmin={isAdmin} />
+                        ))}
+                    </Grid>
+                    <Pagination page={page} pageCount={Math.ceil(fullDriversLength / pageSize)} handlePageChange={handlePageChange} />
+                </main>
+            ) : 'Nothing to show...'}
         </>
     );
 }
