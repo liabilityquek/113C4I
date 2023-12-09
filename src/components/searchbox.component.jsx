@@ -27,7 +27,7 @@ export default function SearchBox({ onSearch }) {
             <Combobox>
                 <Combobox.Input
                     className="border px-2 py-1 rounded w-full bg-blue-100"
-                    placeholder='Search'
+                    placeholder='Search...'
                     onChange={handleChange} />
             </Combobox>
         </div>
