@@ -4,6 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
+.husky
 
 # testing
 /coverage
@@ -35,6 +36,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-jsconfig.json
 
 reference.txt

@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",         // This must be specified if "paths" is set
+    "paths": {
+      "@/*": ["./src/*"]    // Adjust as per your project structure
+    },
+    "target": "es6",        
+    "module": "commonjs",   
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowJs": true,        // Allow JavaScript files to be imported
+    "skipLibCheck": true,   // Skip type checking of all declaration files (*.d.ts)
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true          // Do not emit outputs (since we're using Next.js which handles compilation)
+  },
+  "exclude": [
+    "node_modules",         // Standard exclusion of node_modules
+    "next.config.js",       // Exclude Next.js config from JavaScript checking
+    ".next",                // Exclude Next.js build output directory
+    "out"                   // Exclude any output directory you may have
+  ],
+  "include": [
+    "src/**/*"              // Include all files in the src directory
+  ]
+}

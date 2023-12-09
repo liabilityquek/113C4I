@@ -8,7 +8,8 @@
     "start": "next start -p 5001",
     "lint": "next lint",
     "server": "node src/app/api/server/route.js",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test": "echo 'No tests specified'"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.17",
@@ -46,7 +47,7 @@
   "devDependencies": {
     "@types/uuid": "^9.0.1",
     "eslint-config-prettier": "^9.0.0",
-    "prisma": "^5.1.1",
-    "husky": "^8.0.0"
+    "husky": "^8.0.3",
+    "prisma": "^5.1.1"
   }
 }
